@@ -3,11 +3,10 @@ package tech.itpark.project_delivery_web.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.itpark.framework.security.Auth;
+import tech.itpark.project_delivery_web.model.enums.UserStatus;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,9 +23,15 @@ public class User {
 
     private String secret;
 
+    private UserStatus status;
+
     private String name;
 
+    private String email;
+
     private String address;
+
+    private String role;
 
     @OneToMany
     private List<Order> orders;
