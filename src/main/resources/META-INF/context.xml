@@ -4,7 +4,7 @@
               username="app"
               password="pass"
               driverClassName="org.postgresql.Driver"
-              url="jdbc:postgresql://localhost:5400/appdb"
+              url="jdbc:postgresql://localhost:5432/appdb"
               maxTotal="25"
               maxIdle="10"
               validationQuery="select 1"/>
