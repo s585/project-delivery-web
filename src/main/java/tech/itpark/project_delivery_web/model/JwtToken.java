@@ -1,13 +1,15 @@
 package tech.itpark.project_delivery_web.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "jwt_token")
 public class JwtToken{
     @Id

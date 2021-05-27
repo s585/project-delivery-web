@@ -1,20 +1,22 @@
 package tech.itpark.framework.http;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import tech.itpark.framework.security.Auth;
-import tech.itpark.framework.security.HttpServletRequestAuth;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 public class ServerRequest {
+
+    private static final String TOKEN = "token";
+
     private final HttpServletRequest original;
     private final RequestResponseReaderWriter rw;
 
-    public <T> T read(Class<T> clazz){
-        return rw.read(clazz, original);
+    public String getToken() {
+        return (String) original.getAttribute(TOKEN);
     }
 
-    public Auth auth(){
-        return HttpServletRequestAuth.auth(original);
+    public <T> T read(Class<T> clazz) {
+        return rw.read(clazz, original);
     }
 }

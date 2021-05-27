@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
+import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.JwtToken;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
@@ -21,11 +22,12 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenService jwtTokenService;
+    private final UserMapper userMapper;
 
     @Override
     public Map<String, Object> processRequest(UserDtoAuth incomingData) {

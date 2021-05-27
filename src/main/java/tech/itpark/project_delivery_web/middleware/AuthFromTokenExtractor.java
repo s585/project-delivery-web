@@ -1,19 +1,18 @@
 package tech.itpark.project_delivery_web.middleware;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import tech.itpark.framework.security.AuthProvider;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 public class AuthFromTokenExtractor implements Middleware {
-    private final AuthProvider provider;
 
     @Override
     public boolean process(HttpServletRequest request, HttpServletResponse response) {
         final var token = (String) request.getAttribute("TOKEN");
-        final var auth = provider.provide(token);
-        request.setAttribute("AUTH", auth);
+//        final var auth = provider.provide(token);
+//        request.setAttribute("AUTH", auth);
         return false;
     }
 }

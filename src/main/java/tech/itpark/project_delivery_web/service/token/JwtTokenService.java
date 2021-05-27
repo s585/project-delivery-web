@@ -18,7 +18,7 @@ public interface JwtTokenService {
 
     boolean isActive(String token);
 
-    void cleanup(Long expiredTimeInMilliseconds);
+    void cleanup();
 
     String parseToken(String token);
 }

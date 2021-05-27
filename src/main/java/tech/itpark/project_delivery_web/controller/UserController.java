@@ -20,12 +20,15 @@ public class UserController {
 
     private final UserService service;
 
-    public void getAll(ServerRequest request, ServerResponse response) throws IOException {
+    public void getAll(ServerRequest request, ServerResponse response) {
         // можем доставать auth только из request <- ThreadLocal
         // composable software
-        final var auth = request.auth();
-        final var data = service.findAll(auth);
+        final var data = service.findAll(request.getToken());
         response.write(data, ContentTypes.APPLICATION_JSON);
+    }
+
+    public void getById(ServerRequest request, ServerResponse response) {
+//        service.findById()
     }
 /*
     // users -> ADMIN

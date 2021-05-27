@@ -1,10 +1,10 @@
 package tech.itpark.project_delivery_web.service;
 
-import jakarta.servlet.http.Part;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import tech.itpark.project_delivery_web.data.MediaSaveResponseDto;
 
+import javax.servlet.http.Part;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;

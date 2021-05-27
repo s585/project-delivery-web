@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tech.itpark.project_delivery_web.security.exeption.JwtAuthenticationException;
-import tech.itpark.project_delivery_web.security.exeption.JwtTokenIsNotActiveException;
-import tech.itpark.project_delivery_web.security.exeption.JwtTokenNotFoundException;
+import tech.itpark.project_delivery_web.security.exception.JwtAuthenticationException;
+import tech.itpark.project_delivery_web.security.exception.JwtTokenIsNotActiveException;
+import tech.itpark.project_delivery_web.security.exception.JwtTokenNotFoundException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

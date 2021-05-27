@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import tech.itpark.project_delivery_web.security.exeption.JwtAuthenticationException;
+import tech.itpark.project_delivery_web.security.exception.JwtAuthenticationException;
 import tech.itpark.project_delivery_web.security.CustomUserDetailsService;
 
 import javax.annotation.PostConstruct;
@@ -61,7 +61,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
         return null;
     }

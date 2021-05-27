@@ -3,7 +3,6 @@ package tech.itpark.project_delivery_web.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.itpark.framework.security.Auth;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.User;
@@ -38,13 +37,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> findAll(Auth auth) {
+    public List<UserDto> findAll(String token) {
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
-
 
     public UserDto findById(Long id) {
         User user = userRepository.findById(id)

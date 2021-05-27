@@ -1,10 +1,10 @@
 package tech.itpark.framework.bodyconverter;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import tech.itpark.project_delivery_web.exception.ConversionException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;

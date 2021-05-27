@@ -1,8 +1,6 @@
 package tech.itpark.project_delivery_web.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
 
 import javax.persistence.*;
@@ -10,6 +8,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Data
 @Entity
 @Table(name = "users")

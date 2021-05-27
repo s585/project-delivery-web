@@ -1,7 +1,8 @@
 package tech.itpark.framework.http;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 public class ServerResponse {

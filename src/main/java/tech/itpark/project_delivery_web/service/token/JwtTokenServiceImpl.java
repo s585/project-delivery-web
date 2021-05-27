@@ -2,17 +2,19 @@ package tech.itpark.project_delivery_web.service.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.itpark.project_delivery_web.security.exeption.JwtTokenNotFoundException;
+import tech.itpark.project_delivery_web.security.exception.JwtTokenNotFoundException;
 import tech.itpark.project_delivery_web.model.JwtToken;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
 import tech.itpark.project_delivery_web.repository.JwtTokenRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class JwtTokenServiceImpl implements JwtTokenService {
 
     private static final String NOT_FOUND_MESSAGE = "Token not found";
+    private static final long EXPIRATION_TIME = 2592000000L;
 
     private final JwtTokenRepository jwtTokenRepository;
 
@@ -23,7 +25,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public void create(JwtToken jwtToken) {
-         jwtTokenRepository.save(jwtToken);
+        jwtTokenRepository.save(jwtToken);
     }
 
     @Override
@@ -33,8 +35,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public void update(JwtToken jwtToken) {
-        String token = jwtToken.getToken();
-        jwtTokenRepository.update(jwtToken);
+        jwtTokenRepository.save(jwtToken);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .orElseThrow(() -> new JwtTokenNotFoundException(NOT_FOUND_MESSAGE));
         if (jwtToken.getStatus().equals(TokenStatus.ACTIVE)) {
             jwtToken.setStatus(TokenStatus.INACTIVE);
-            jwtTokenRepository.update(jwtToken);
+            jwtTokenRepository.save(jwtToken);
             return true;
         }
         return false;
@@ -63,8 +64,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public void cleanup(Long expiredTimeInMilliseconds) {
-        jwtTokenRepository.cleanup(expiredTimeInMilliseconds);
+    public void cleanup() {
+        LocalDateTime dateTime = LocalDateTime.now().minusSeconds(EXPIRATION_TIME);
+        jwtTokenRepository.deleteJwtTokenByCreationDateBefore(dateTime);
     }
 
     @Override

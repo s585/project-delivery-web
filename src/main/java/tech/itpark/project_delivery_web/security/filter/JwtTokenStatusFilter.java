@@ -1,8 +1,9 @@
 package tech.itpark.project_delivery_web.security.filter;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.web.filter.GenericFilterBean;
-import tech.itpark.project_delivery_web.security.exeption.JwtTokenIsNotActiveException;
+import tech.itpark.project_delivery_web.security.exception.JwtTokenIsNotActiveException;
 import tech.itpark.project_delivery_web.service.token.JwtTokenService;
 
 import javax.servlet.FilterChain;
@@ -14,10 +15,12 @@ import java.io.IOException;
 import java.util.Objects;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class JwtTokenStatusFilter extends GenericFilterBean {
 
     private static final String ERROR_MESSAGE = "Token is not valid";
-    private final JwtTokenService jwtTokenService;
+
+    private JwtTokenService jwtTokenService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
