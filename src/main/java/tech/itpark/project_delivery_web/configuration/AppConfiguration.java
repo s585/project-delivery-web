@@ -72,11 +72,6 @@ public class AppConfiguration {
         basic.setPassword("pass");
         basic.setUrl("jdbc:postgresql://localhost:5432/db");
         return basic;
-//        Spring way:
-//        final var cxt = new InitialContext();
-//        final var dataSource = (DataSource) cxt.lookup("java:/comp/env/jdbc/db");
-//        return dataSource;
-//        return (DataSource) cxt.lookup("java:/comp/env/jdbc/db");
     }
 
     @Bean
