@@ -28,6 +28,9 @@ import tech.itpark.framework.http.Handler;
 import tech.itpark.framework.http.Methods;
 import tech.itpark.project_delivery_web.controller.MediaController;
 import tech.itpark.project_delivery_web.controller.UserController;
+import tech.itpark.project_delivery_web.repository.JwtTokenRepository;
+import tech.itpark.project_delivery_web.service.token.JwtTokenService;
+import tech.itpark.project_delivery_web.service.token.JwtTokenServiceImpl;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -75,6 +78,10 @@ public class AppConfiguration {
     }
 
     @Bean
+    public JwtTokenService jwtTokenService(JwtTokenRepository repository) {
+        return new JwtTokenServiceImpl(repository);
+    }
+    @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
@@ -89,7 +96,7 @@ public class AppConfiguration {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "update");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "none");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 

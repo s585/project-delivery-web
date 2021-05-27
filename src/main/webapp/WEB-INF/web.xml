@@ -13,7 +13,7 @@
         <listener-class>tech.itpark.framework.listener.ContextLoadDestroyListener</listener-class>
     </listener>
 
-    <filter>
+    <!--<filter>
         <filter-name>JwtTokenStatusFilter</filter-name>
         <filter-class>tech.itpark.project_delivery_web.security.filter.JwtTokenStatusFilter</filter-class>
     </filter>
@@ -21,7 +21,7 @@
     <filter-mapping>
         <filter-name>JwtTokenStatusFilter</filter-name>
         <servlet-name>front-controller</servlet-name>
-    </filter-mapping>
+    </filter-mapping>-->
 
     <servlet>
         <servlet-name>front-controller</servlet-name>
