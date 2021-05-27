@@ -1,5 +1,7 @@
 package tech.itpark.project_delivery_web.model;
 
+import tech.itpark.project_delivery_web.model.enums.Category;
+
 import javax.persistence.*;
 
 @Entity

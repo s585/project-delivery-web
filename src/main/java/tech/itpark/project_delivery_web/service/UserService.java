@@ -1,12 +1,74 @@
 package tech.itpark.project_delivery_web.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tech.itpark.framework.security.Auth;
+import tech.itpark.project_delivery_web.dto.user.UserDto;
+import tech.itpark.project_delivery_web.mappers.UserMapper;
+import tech.itpark.project_delivery_web.model.User;
+import tech.itpark.project_delivery_web.repository.UserRepository;
 
-//@Service
-//@RequiredArgsConstructor
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional
 public class UserService {
-//    private final UserRepositoryImpl repository;
+
+    private UserRepository userRepository;
+
+    private UserMapper userMapper;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setUserMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
+    public List<UserDto> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDto> findAll(Auth auth) {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
+        return userMapper.toDto(user);
+    }
+
+    public UserDto create(UserDto dto) {
+        User user = userMapper.toEntity(dto);
+        User saved = userRepository.save(user);
+        return userMapper.toDto(saved);
+    }
+
+
+    public UserDto update(UserDto dto) {
+        User user = userMapper.toEntity(dto);
+        User saved = userRepository.save(user);
+        return userMapper.toDto(saved);
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+    //    private final UserRepositoryImpl repository;
 //    private final PasswordHasher passwordHasher;
 //    private final TokenGenerator tokenGenerator;
 //

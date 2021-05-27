@@ -17,9 +17,17 @@ import java.io.IOException;
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-    /*private final UserService service;
 
+    private final UserService service;
 
+    public void getAll(ServerRequest request, ServerResponse response) throws IOException {
+        // можем доставать auth только из request <- ThreadLocal
+        // composable software
+        final var auth = request.auth();
+        final var data = service.findAll(auth);
+        response.write(data, ContentTypes.APPLICATION_JSON);
+    }
+/*
     // users -> ADMIN
     public void getAll(ServerRequest request, ServerResponse response) throws IOException {
         // можем доставать auth только из request <- ThreadLocal

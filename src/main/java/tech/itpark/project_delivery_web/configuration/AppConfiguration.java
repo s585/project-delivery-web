@@ -1,14 +1,17 @@
 package tech.itpark.project_delivery_web.configuration;
 
 import com.google.gson.Gson;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.PostgreSQL10Dialect;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.convention.NamingConventions;
 import org.postgresql.Driver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -26,7 +29,6 @@ import tech.itpark.framework.http.Methods;
 import tech.itpark.project_delivery_web.controller.MediaController;
 import tech.itpark.project_delivery_web.controller.UserController;
 
-import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.security.MessageDigest;
@@ -34,6 +36,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @Configuration
 @EnableTransactionManagement
@@ -44,16 +48,34 @@ import java.util.Properties;
 public class AppConfiguration {
 
     @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STANDARD)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(PRIVATE)
+                .setSourceNamingConvention(NamingConventions.NONE)
+                .setDestinationNamingConvention(NamingConventions.NONE);
+        return mapper;
+    }
+
+    @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/db");
-        dataSource.setUsername("app");
-        dataSource.setPassword("pass");
-        dataSource.setDriverClassName(Driver.class.getName());
-        return dataSource;
+        BasicDataSource basic = new BasicDataSource();
+        basic.setMinIdle(10);
+        basic.setMaxIdle(25);
+        basic.setMaxTotal(50);
+        basic.setMaxOpenPreparedStatements(100);
+        basic.setDriverClassName(Driver.class.getName());
+        basic.setUsername("app");
+        basic.setPassword("pass");
+        basic.setUrl("jdbc:postgresql://localhost:5432/db");
+        return basic;
 //        Spring way:
-//        return (DataSource) new JndiTemplate().lookup("java:/comp/env/jdbc/db");
 //        final var cxt = new InitialContext();
+//        final var dataSource = (DataSource) cxt.lookup("java:/comp/env/jdbc/db");
+//        return dataSource;
 //        return (DataSource) cxt.lookup("java:/comp/env/jdbc/db");
     }
 
@@ -104,7 +126,8 @@ public class AppConfiguration {
 
     @Bean
     public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl) {
-//        return Map.of(
+        return Map.of("/api/users/", Map.of(Methods.GET, userCtrl::getAll));
+        //        return Map.of(
 //                "/api/auth/registration", Map.of(
 //                        Methods.POST, userCtrl::register
 //                ),
@@ -121,6 +144,6 @@ public class AppConfiguration {
 //                        Methods.POST, mediaCtrl::save
 //                )
 //        );
-        return null;
+//        return null;
     }
 }
