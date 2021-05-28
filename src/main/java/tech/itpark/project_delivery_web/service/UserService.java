@@ -66,6 +66,10 @@ public class UserService {
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
+
+    public User getByEmail(String email) {
+        return userRepository.getByEmail(email);
+    }
     //    private final UserRepositoryImpl repository;
 //    private final PasswordHasher passwordHasher;
 //    private final TokenGenerator tokenGenerator;

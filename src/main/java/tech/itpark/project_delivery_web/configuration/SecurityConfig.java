@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                        // -- Swagger UI v3 (OpenAPI)
 //                        "/v3/api-docs/**",
 //                        "/swagger-ui/**").permitAll()
-                .antMatchers("...").permitAll() //TODO указать урл авторизации
+                .antMatchers("/api/auth/login").permitAll()
                 .antMatchers("/...").permitAll() //TODO указать урл логаута
                 .antMatchers("/**").fullyAuthenticated()
                 .anyRequest().authenticated()
