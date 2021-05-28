@@ -11,7 +11,7 @@ import java.util.Collection;
 
 @Service
 public class MediaService implements InitializingBean {
-    private final Path path = Path.of("/opt/media");
+    private final Path path = Path.of("/home/s585/media");
 
     @Override
     public void afterPropertiesSet() throws Exception {

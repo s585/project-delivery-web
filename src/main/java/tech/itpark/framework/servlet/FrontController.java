@@ -1,10 +1,7 @@
 package tech.itpark.framework.servlet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import tech.itpark.framework.http.*;
-import tech.itpark.project_delivery_web.security.filter.JwtTokenStatusFilter;
-import tech.itpark.project_delivery_web.service.token.JwtTokenService;
 
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;

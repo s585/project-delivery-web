@@ -9,6 +9,7 @@ import tech.itpark.framework.http.ServerResponse;
 import tech.itpark.project_delivery_web.dto.LoginRequestDto;
 import tech.itpark.project_delivery_web.dto.PasswordResetRequestDto;
 import tech.itpark.project_delivery_web.dto.RegistrationRequestDto;
+import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.service.UserService;
 
@@ -28,7 +29,13 @@ public class UserController {
     }
 
     public void getById(ServerRequest request, ServerResponse response) {
-//        service.findById()
+        final UserDto dto = service.findById(Long.valueOf(request.getRequestParameter("id")), request.getToken());
+        response.write(dto, ContentTypes.APPLICATION_JSON);
+    }
+
+    public void deleteById(ServerRequest request, ServerResponse response) throws IOException {
+        service.deleteById(Long.valueOf(request.getRequestParameter("id")), request.getToken());
+        response.write("deleteById", ContentTypes.TEXT_PLAIN);
     }
 /*
     // users -> ADMIN

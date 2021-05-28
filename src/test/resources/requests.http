@@ -60,12 +60,12 @@ client.test("Request executed successfully", function() {
 # Cookie
 # 3. Body (GET)
 
-GET {{host}}/api/users/all
+GET {{host}}/api/users/
 Authorization: {{token}}
 
 ###
 
-GET {{host}}/api/users/all
+GET {{host}}/api/users/
 
 ###
 

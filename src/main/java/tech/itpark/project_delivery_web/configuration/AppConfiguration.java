@@ -96,7 +96,7 @@ public class AppConfiguration {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "none");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "update");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 
@@ -129,6 +129,7 @@ public class AppConfiguration {
     @Bean
     public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl) {
         return Map.of("/api/users/", Map.of(Methods.GET, userCtrl::getAll));
+//                "/api/users?id=*", Map.of(Methods.POST, userCtrl::getById));
         //        return Map.of(
 //                "/api/auth/registration", Map.of(
 //                        Methods.POST, userCtrl::register

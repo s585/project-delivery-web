@@ -3,6 +3,8 @@ package tech.itpark.framework.http;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ServerRequest {
@@ -15,6 +17,18 @@ public class ServerRequest {
 
     public String getToken() {
         return original.getHeader("Authorization").replace("Bearer_", "");
+    }
+
+    public String getRequestBody(){
+        try {
+            return original.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getRequestParameter(String parameterName){
+        return original.getParameter(parameterName);
     }
 
     public <T> T read(Class<T> clazz) {

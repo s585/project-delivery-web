@@ -44,7 +44,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto findById(Long id) {
+    public UserDto findById(Long id, String token) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         return userMapper.toDto(user);
@@ -63,7 +63,7 @@ public class UserService {
         return userMapper.toDto(saved);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id, String token) {
         userRepository.deleteById(id);
     }
 
