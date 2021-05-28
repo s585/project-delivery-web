@@ -12,8 +12,9 @@ public class ServerRequest {
     private final HttpServletRequest original;
     private final RequestResponseReaderWriter rw;
 
+
     public String getToken() {
-        return (String) original.getAttribute(TOKEN);
+        return original.getHeader("Authorization").replace("Bearer_", "");
     }
 
     public <T> T read(Class<T> clazz) {
