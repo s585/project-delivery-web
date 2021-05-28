@@ -1,7 +1,7 @@
 package tech.itpark.project_delivery_web.service.authentication;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.JwtToken;
+import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenProvider;
@@ -21,13 +22,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtTokenService jwtTokenService;
-    private final UserMapper userMapper;
+    private AuthenticationManager authenticationManager;
+    private JwtTokenProvider jwtTokenProvider;
+    private JwtTokenService jwtTokenService;
+    private UserMapper userMapper;
+
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Autowired
+    public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @Autowired
+    public void setJwtTokenService(JwtTokenService jwtTokenService) {
+        this.jwtTokenService = jwtTokenService;
+    }
+
+    @Autowired
+    public void setUserMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     @Override
     public Map<String, Object> processRequest(UserDtoAuth incomingData) {
@@ -56,7 +76,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String createToken(Authentication authentication, String role, String email) {
+    public String createToken(Authentication authentication, Role role, String email) {
         return jwtTokenProvider.createToken(authentication, role, email);
     }
 

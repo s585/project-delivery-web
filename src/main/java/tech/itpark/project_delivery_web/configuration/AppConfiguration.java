@@ -11,7 +11,12 @@ import org.postgresql.Driver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -26,6 +31,7 @@ import tech.itpark.framework.crypto.TokenGenerator;
 import tech.itpark.framework.crypto.TokenGeneratorDefaultImpl;
 import tech.itpark.framework.http.Handler;
 import tech.itpark.framework.http.Methods;
+import tech.itpark.project_delivery_web.controller.AuthenticationController;
 import tech.itpark.project_delivery_web.controller.MediaController;
 import tech.itpark.project_delivery_web.controller.UserController;
 import tech.itpark.project_delivery_web.repository.JwtTokenRepository;
@@ -74,13 +80,29 @@ public class AppConfiguration {
         basic.setUsername("app");
         basic.setPassword("pass");
         basic.setUrl("jdbc:postgresql://localhost:5432/db");
+
         return basic;
+    }
+
+    @Bean
+    @DependsOn("transactionManager")
+    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new ClassPathResource("data.sql"));
+        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(dataSource);
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+
+        resourceDatabasePopulator.execute(dataSource);
+
+        return dataSourceInitializer;
     }
 
     @Bean
     public JwtTokenService jwtTokenService(JwtTokenRepository repository) {
         return new JwtTokenServiceImpl(repository);
     }
+
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
@@ -127,26 +149,11 @@ public class AppConfiguration {
     }
 
     @Bean
-    public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl) {
-        return Map.of("/api/users/", Map.of(Methods.GET, userCtrl::getAll));
-//                "/api/users?id=*", Map.of(Methods.POST, userCtrl::getById));
-        //        return Map.of(
-//                "/api/auth/registration", Map.of(
-//                        Methods.POST, userCtrl::register
-//                ),
-//                "/api/auth/login", Map.of(
-//                        Methods.POST, userCtrl::login
-//                ),
-//                "/api/auth/reset-password", Map.of(
-//                        Methods.POST, userCtrl::passwordReset
-//                ),
-//                "/api/users/all", Map.of(
-//                        Methods.GET, userCtrl::getAll
-//                ),
-//                "api/media", Map.of(
-//                        Methods.POST, mediaCtrl::save
-//                )
-//        );
-//        return null;
+    public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl,
+                                                    AuthenticationController authCtrl) {
+        return Map.of(
+                "/api/users/all", Map.of(Methods.GET, userCtrl::getAll),
+                "/api/users", Map.of(Methods.GET, userCtrl::getById),
+                "/api/login", Map.of(Methods.POST, authCtrl::login));
     }
 }

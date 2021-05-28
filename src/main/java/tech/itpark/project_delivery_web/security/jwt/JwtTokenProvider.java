@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.security.exception.JwtAuthenticationException;
 import tech.itpark.project_delivery_web.security.CustomUserDetailsService;
 
@@ -33,10 +34,10 @@ public class JwtTokenProvider {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
 
-    public String createToken(Authentication authentication, String role, String email) {
+    public String createToken(Authentication authentication, Role role, String email) {
 
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("role", role);
+        claims.put("role", role.getName());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + expired);

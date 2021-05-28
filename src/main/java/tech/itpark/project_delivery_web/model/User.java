@@ -23,6 +23,7 @@ public class User {
 
     private String secret;
 
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     private String name;
@@ -31,7 +32,8 @@ public class User {
 
     private String address;
 
-    private String role;
+    @ManyToOne
+    private Role role;
 
     @OneToMany
     private List<Order> orders;

@@ -19,7 +19,7 @@ public class ServerRequest {
         return original.getHeader("Authorization").replace("Bearer_", "");
     }
 
-    public String getRequestBody(){
+    public String getRequestBody() {
         try {
             return original.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException e) {
@@ -27,8 +27,20 @@ public class ServerRequest {
         }
     }
 
-    public String getRequestParameter(String parameterName){
+    public String getRequestParameter(String parameterName) {
         return original.getParameter(parameterName);
+    }
+
+    public String getParameter(String parameterName) {
+        return original.getParameter(parameterName);
+    }
+
+    public String getBody() {
+        try {
+            return original.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        } catch (IOException e) {
+            throw new RuntimeException("error");
+        }
     }
 
     public <T> T read(Class<T> clazz) {

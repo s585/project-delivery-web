@@ -33,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword(), user.getName(),
-                user.getSecret(), mapToGrantedAuthorities(user.getRole()) , user.getStatus());
+                user.getSecret(), mapToGrantedAuthorities(user.getRole().getName()), user.getStatus());
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(String userRole) {

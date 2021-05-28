@@ -16,12 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Objects;
 
-@Component
 public class JwtTokenStatusFilter extends GenericFilterBean {
 
     private static final String ERROR_MESSAGE = "Token is not valid";
 
-    @Autowired
     private JwtTokenService jwtTokenService;
 
     @Override

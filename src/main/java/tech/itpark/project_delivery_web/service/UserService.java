@@ -7,6 +7,7 @@ import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.repository.UserRepository;
+import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository userRepository;
-
     private UserMapper userMapper;
+    private AuthenticationService authenticationService;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -30,6 +31,11 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
+    @Autowired
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
     public List<UserDto> findAll() {
         return userRepository.findAll()
                 .stream()
@@ -38,6 +44,7 @@ public class UserService {
     }
 
     public List<UserDto> findAll(String token) {
+        String email = authenticationService.getEmail(token);
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toDto)
