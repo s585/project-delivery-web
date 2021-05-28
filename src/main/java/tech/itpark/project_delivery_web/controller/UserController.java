@@ -26,7 +26,7 @@ public class UserController {
         response.write(users, ContentTypes.APPLICATION_JSON);
     }
 
-    public void save(ServerRequest request, ServerResponse response) {
+    public void register(ServerRequest request, ServerResponse response) {
         final UserDto saved = service.create(request.read(UserDto.class));
         response.write(saved, ContentTypes.APPLICATION_JSON);
     }

@@ -28,8 +28,6 @@ public class CartController {
         response.write(saved, ContentTypes.APPLICATION_JSON);
     }
 
-    public void
-
     public void getById(ServerRequest request, ServerResponse response) {
         final CartDto dto = cartService.findById(Long.valueOf(request.getRequestParameter("id")), request.getToken());
         response.write(dto, ContentTypes.APPLICATION_JSON);

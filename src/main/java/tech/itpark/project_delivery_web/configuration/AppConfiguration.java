@@ -84,19 +84,19 @@ public class AppConfiguration {
         return basic;
     }
 
-    @Bean
-    @DependsOn("transactionManager")
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-        resourceDatabasePopulator.addScript(new ClassPathResource("data.sql"));
-        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
-        dataSourceInitializer.setDataSource(dataSource);
-        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
-
-        resourceDatabasePopulator.execute(dataSource);
-
-        return dataSourceInitializer;
-    }
+//    @Bean
+//    @DependsOn("transactionManager")
+//    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
+//        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+//        resourceDatabasePopulator.addScript(new ClassPathResource("data.sql"));
+//        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+//        dataSourceInitializer.setDataSource(dataSource);
+//        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+//
+//        resourceDatabasePopulator.execute(dataSource);
+//
+//        return dataSourceInitializer;
+//    }
 
     @Bean
     public JwtTokenService jwtTokenService(JwtTokenRepository repository) {
@@ -153,7 +153,9 @@ public class AppConfiguration {
             UserController userCtrl, MediaController mediaCtrl, AuthenticationController authCtrl) {
         return Map.of(
                 "/api/users/all", Map.of(Methods.GET, userCtrl::getAll),
+                "/api/users/register", Map.of(Methods.POST, userCtrl::register),
                 "/api/users", Map.of(Methods.GET, userCtrl::getById),
-                "/api/login", Map.of(Methods.POST, authCtrl::login));
+                "/api/auth/login", Map.of(Methods.POST, authCtrl::login),
+                "/api/auth/recover", Map.of(Methods.PUT, authCtrl::recoverPassword));
     }
 }

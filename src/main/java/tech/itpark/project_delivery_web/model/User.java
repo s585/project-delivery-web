@@ -32,7 +32,8 @@ public class User {
 
     private String address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToMany

@@ -6,7 +6,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.itpark.project_delivery_web.dto.user.PasswordRecoverDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.JwtToken;
@@ -15,6 +17,8 @@ import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenProvider;
 import tech.itpark.project_delivery_web.service.token.JwtTokenService;
+import tech.itpark.project_delivery_web.service.user.UserService;
+import tech.itpark.project_delivery_web.service.user.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -28,6 +32,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private JwtTokenProvider jwtTokenProvider;
     private JwtTokenService jwtTokenService;
     private UserMapper userMapper;
+    private UserService service;
+    private BCryptPasswordEncoder decoder;
+
+    @Autowired
+    public void setPasswordEncoder(BCryptPasswordEncoder decoder) {
+        this.decoder = decoder;
+    }
+
+    @Autowired
+    public void setService(UserService service) {
+        this.service = service;
+    }
 
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
@@ -89,7 +105,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         jwtTokenService.create(token);
     }
 
+    @Override
+    public boolean recoverPassword(PasswordRecoverDto dto) {
+        User user = service.getByEmail(dto.getEmail());
+        if (!user.getSecret().equals(decoder.encode(dto.getSecret()))) throw new AccessDeniedException("!!!!!!!!!");
+        user.setPassword(decoder.encode(dto.getPassword()));
+        service.update(userMapper.toDto(user));
+        return true;
+    }
+
     private boolean checkAuthorityPermission(User user) {
-        return user.getRole().equals("ADMIN");
+        return user.getRole().getName().equals("ADMIN");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.security.jwt.CustomUserDetails;
 import tech.itpark.project_delivery_web.service.user.UserService;
@@ -33,12 +34,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword(), user.getName(),
-                user.getSecret(), mapToGrantedAuthorities(user.getRole().getName()), user.getStatus());
+                user.getRole(), mapToGrantedAuthorities(user.getRole()), user.getStatus());
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(String userRole) {
+    private static List<GrantedAuthority> mapToGrantedAuthorities(Role userRole) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.getName()));
         return authorities;
     }
 }

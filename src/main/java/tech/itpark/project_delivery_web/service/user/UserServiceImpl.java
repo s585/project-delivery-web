@@ -1,15 +1,18 @@
 package tech.itpark.project_delivery_web.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.User;
+import tech.itpark.project_delivery_web.model.enums.UserStatus;
 import tech.itpark.project_delivery_web.repository.UserRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
     private AuthenticationService authenticationService;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -34,6 +38,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setAuthenticationService(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -54,7 +63,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto create(UserDto dto) {
-        final User user = userMapper.toEntity(dto);
+        User user = userMapper.toEntity(dto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setSecret(passwordEncoder.encode(user.getSecret()));
+        user.setStatus(UserStatus.ACTIVE);
         final User saved = userRepository.save(user);
         return userMapper.toDto(saved);
     }

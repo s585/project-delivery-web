@@ -3,6 +3,7 @@ package tech.itpark.project_delivery_web.security.jwt;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class CustomUserDetails implements UserDetails {
     private final String name;
     private final String password;
     private final String email;
-    private final String secret;
+    private final Role role;
     private final Collection<? extends GrantedAuthority> authorities;
     private final UserStatus status;
 
@@ -61,4 +62,11 @@ public class CustomUserDetails implements UserDetails {
         return name;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }
