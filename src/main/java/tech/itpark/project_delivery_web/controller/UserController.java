@@ -11,6 +11,7 @@ import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.service.user.UserService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,8 +22,8 @@ public class UserController {
     public void getAll(ServerRequest request, ServerResponse response) {
         // можем доставать auth только из request <- ThreadLocal
         // composable software
-        final var data = service.findAll(request.getToken());
-        response.write(data, ContentTypes.APPLICATION_JSON);
+        final List<UserDto> users = service.findAll(request.getToken());
+        response.write(users, ContentTypes.APPLICATION_JSON);
     }
 
     public void save(ServerRequest request, ServerResponse response) {
