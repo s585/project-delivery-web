@@ -6,12 +6,9 @@ import org.springframework.stereotype.Controller;
 import tech.itpark.framework.http.ContentTypes;
 import tech.itpark.framework.http.ServerRequest;
 import tech.itpark.framework.http.ServerResponse;
-import tech.itpark.project_delivery_web.dto.LoginRequestDto;
-import tech.itpark.project_delivery_web.dto.PasswordResetRequestDto;
-import tech.itpark.project_delivery_web.dto.RegistrationRequestDto;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.model.User;
-import tech.itpark.project_delivery_web.service.UserService;
+import tech.itpark.project_delivery_web.service.user.UserService;
 
 import java.io.IOException;
 
@@ -26,6 +23,11 @@ public class UserController {
         // composable software
         final var data = service.findAll(request.getToken());
         response.write(data, ContentTypes.APPLICATION_JSON);
+    }
+
+    public void save(ServerRequest request, ServerResponse response) {
+        final UserDto saved = service.create(request.read(UserDto.class));
+        response.write(saved, ContentTypes.APPLICATION_JSON);
     }
 
     public void getById(ServerRequest request, ServerResponse response) {

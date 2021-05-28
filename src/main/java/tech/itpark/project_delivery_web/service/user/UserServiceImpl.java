@@ -1,4 +1,4 @@
-package tech.itpark.project_delivery_web.service;
+package tech.itpark.project_delivery_web.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
@@ -36,13 +36,7 @@ public class UserService {
         this.authenticationService = authenticationService;
     }
 
-    public List<UserDto> findAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
+    @Override
     public List<UserDto> findAll(String token) {
         String email = authenticationService.getEmail(token);
         return userRepository.findAll()
@@ -51,29 +45,34 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public UserDto findById(Long id, String token) {
-        User user = userRepository.findById(id)
+        final User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         return userMapper.toDto(user);
     }
 
+    @Override
     public UserDto create(UserDto dto) {
-        User user = userMapper.toEntity(dto);
-        User saved = userRepository.save(user);
+        final User user = userMapper.toEntity(dto);
+        final User saved = userRepository.save(user);
         return userMapper.toDto(saved);
     }
 
 
+    @Override
     public UserDto update(UserDto dto) {
-        User user = userMapper.toEntity(dto);
-        User saved = userRepository.save(user);
+        final User user = userMapper.toEntity(dto);
+        final User saved = userRepository.save(user);
         return userMapper.toDto(saved);
     }
 
+    @Override
     public void deleteById(Long id, String token) {
         userRepository.deleteById(id);
     }
 
+    @Override
     public User getByEmail(String email) {
         return userRepository.getByEmail(email);
     }

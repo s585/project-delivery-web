@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.security.jwt.CustomUserDetails;
-import tech.itpark.project_delivery_web.service.UserService;
+import tech.itpark.project_delivery_web.service.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -149,8 +149,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl,
-                                                    AuthenticationController authCtrl) {
+    public Map<String, Map<String, Handler>> routes(
+            UserController userCtrl, MediaController mediaCtrl, AuthenticationController authCtrl) {
         return Map.of(
                 "/api/users/all", Map.of(Methods.GET, userCtrl::getAll),
                 "/api/users", Map.of(Methods.GET, userCtrl::getById),
