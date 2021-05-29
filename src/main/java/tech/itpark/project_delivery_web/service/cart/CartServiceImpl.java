@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import tech.itpark.project_delivery_web.dto.CartDto;
 import tech.itpark.project_delivery_web.mappers.CartMapper;
 import tech.itpark.project_delivery_web.model.Cart;
+import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.repository.CartRepository;
+import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
+import tech.itpark.project_delivery_web.service.user.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -18,13 +21,28 @@ public class CartServiceImpl implements CartService {
 
     private CartMapper cartMapper;
 
+    private UserService userService;
+
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     @Autowired
     public void setCartRepository(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
+
     @Autowired
     public void setCartMapper(CartMapper cartMapper) {
         this.cartMapper = cartMapper;
+    }
+
+    @Autowired
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @Override

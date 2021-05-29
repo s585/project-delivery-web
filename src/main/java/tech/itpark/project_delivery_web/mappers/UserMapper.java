@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
+import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
 import tech.itpark.project_delivery_web.model.User;
 
 import java.util.Objects;
@@ -21,6 +22,12 @@ public class UserMapper {
     }
 
     public User toEntity(UserDto dto) {
+        return Objects.isNull(dto)
+                ? null
+                : modelMapper.map(dto, User.class);
+    }
+
+    public User toEntity(UserDtoRegistration dto) {
         return Objects.isNull(dto)
                 ? null
                 : modelMapper.map(dto, User.class);

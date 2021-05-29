@@ -1,10 +1,12 @@
 package tech.itpark.project_delivery_web.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
+import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
@@ -12,7 +14,6 @@ import tech.itpark.project_delivery_web.repository.UserRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDto> findAll(String token) {
         String email = authenticationService.getEmail(token);
         return userRepository.findAll()
@@ -62,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto create(UserDto dto) {
+    public UserDto create(UserDtoRegistration dto) {
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSecret(passwordEncoder.encode(user.getSecret()));
@@ -77,6 +79,11 @@ public class UserServiceImpl implements UserService {
         final User user = userMapper.toEntity(dto);
         final User saved = userRepository.save(user);
         return userMapper.toDto(saved);
+    }
+
+    @Override
+    public User update(User user) {
+        return userRepository.save(user);
     }
 
     @Override

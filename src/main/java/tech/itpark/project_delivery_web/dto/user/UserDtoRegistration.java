@@ -1,21 +1,21 @@
 package tech.itpark.project_delivery_web.dto.user;
 
-import lombok.Getter;
-import lombok.Setter;
 import tech.itpark.project_delivery_web.dto.RoleDto;
 import tech.itpark.project_delivery_web.model.Order;
 
 import java.util.List;
 
-@Getter
-@Setter
-public class UserDto {
+public class UserDtoRegistration {
 
     private Long id;
 
     private String name;
 
     private String email;
+
+    private String password;
+
+    private String secret;
 
     private String address;
 

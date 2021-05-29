@@ -32,6 +32,7 @@ import tech.itpark.framework.crypto.TokenGeneratorDefaultImpl;
 import tech.itpark.framework.http.Handler;
 import tech.itpark.framework.http.Methods;
 import tech.itpark.project_delivery_web.controller.AuthenticationController;
+import tech.itpark.project_delivery_web.controller.CartController;
 import tech.itpark.project_delivery_web.controller.MediaController;
 import tech.itpark.project_delivery_web.controller.UserController;
 import tech.itpark.project_delivery_web.repository.JwtTokenRepository;
@@ -118,7 +119,7 @@ public class AppConfiguration {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "update");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "none");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 
@@ -149,8 +150,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public Map<String, Map<String, Handler>> routes(
-            UserController userCtrl, MediaController mediaCtrl, AuthenticationController authCtrl) {
+    public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl,
+                                                    AuthenticationController authCtrl, CartController cartCtrl) {
         return Map.of(
                 "/api/users/all", Map.of(Methods.GET, userCtrl::getAll),
                 "/api/users/register", Map.of(Methods.POST, userCtrl::register),

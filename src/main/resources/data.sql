@@ -1,5 +1,11 @@
-INSERT INTO roles(name)
-VALUES ('ADMIN');
+DELETE
+FROM users;
+DELETE
+FROM roles;
 
-INSERT INTO users(address, latitude, longitude, name, password, secret, email, role_id, status)
-VALUES (null, null, null, 'admin', 'pass', 'admin', 'admin@mail.com', 1, 'ACTIVE')
+INSERT INTO roles(id, name)
+VALUES (1, 'ADMIN');
+
+INSERT INTO users(id, address, latitude, longitude, name, password, secret, email, role_id, status)
+VALUES (1, null, null, null, 'admin', '$2a$04$8j4Zq6lbQa0dQ8vNajhWLOPyckkC4Uwfpu7f5VBkIFnKn78Jpr0fG', 'admin',
+        'admin@mail.com', 1, 'ACTIVE')

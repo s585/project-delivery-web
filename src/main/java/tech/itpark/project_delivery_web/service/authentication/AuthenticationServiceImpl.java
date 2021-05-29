@@ -8,7 +8,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.user.PasswordRecoverDto;
+import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.JwtToken;
@@ -23,6 +25,7 @@ import tech.itpark.project_delivery_web.service.user.UserServiceImpl;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -33,11 +36,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private JwtTokenService jwtTokenService;
     private UserMapper userMapper;
     private UserService service;
-    private BCryptPasswordEncoder decoder;
+    private BCryptPasswordEncoder encoder;
 
     @Autowired
     public void setPasswordEncoder(BCryptPasswordEncoder decoder) {
-        this.decoder = decoder;
+        this.encoder = decoder;
     }
 
     @Autowired
@@ -106,15 +109,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional
     public boolean recoverPassword(PasswordRecoverDto dto) {
         User user = service.getByEmail(dto.getEmail());
-        if (!user.getSecret().equals(decoder.encode(dto.getSecret()))) throw new AccessDeniedException("!!!!!!!!!");
-        user.setPassword(decoder.encode(dto.getPassword()));
-        service.update(userMapper.toDto(user));
+        if (!encoder.matches(dto.getSecret(), user.getSecret()))
+            throw new AccessDeniedException("Секреты не совпадают");
+        user.setPassword(encoder.encode(dto.getPassword()));
+        service.update(user);
         return true;
     }
 
     private boolean checkAuthorityPermission(User user) {
-        return user.getRole().getName().equals("ADMIN");
+        List<String> roles = List.of("ADMIN", "USER");
+        return roles.contains(user.getRole().getName());
     }
 }
