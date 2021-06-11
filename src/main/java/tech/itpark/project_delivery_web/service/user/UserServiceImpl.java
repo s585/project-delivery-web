@@ -47,7 +47,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDto> findAll(String token) {
         String email = authenticationService.getEmail(token);
         return userRepository.findAll()

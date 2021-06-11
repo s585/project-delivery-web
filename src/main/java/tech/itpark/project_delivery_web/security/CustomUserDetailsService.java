@@ -33,8 +33,15 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User with email: " + email + " not found");
         }
 
-        return new CustomUserDetails(user.getId(), user.getEmail(), user.getPassword(), user.getName(),
-                user.getRole(), mapToGrantedAuthorities(user.getRole()), user.getStatus());
+        return CustomUserDetails.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .name(user.getName())
+                .role(user.getRole())
+                .authorities(mapToGrantedAuthorities(user.getRole()))
+                .status(user.getStatus())
+                .build();
     }
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(Role userRole) {

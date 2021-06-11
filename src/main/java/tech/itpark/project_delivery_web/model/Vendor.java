@@ -1,27 +1,16 @@
 package tech.itpark.project_delivery_web.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "vendors")
-public class Vendor {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String password;
-
-    private String secret;
-
-    private String name;
-
-    private String address;
-
-    private Double lon;
-
-    private Double lat;
+public class Vendor extends LoginableUser {
 
     @OneToMany
     private List<Product> products;

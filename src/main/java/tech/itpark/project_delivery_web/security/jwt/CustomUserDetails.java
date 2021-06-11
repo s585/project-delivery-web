@@ -1,6 +1,7 @@
 package tech.itpark.project_delivery_web.security.jwt;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import tech.itpark.project_delivery_web.model.Role;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
+@Builder
 public class CustomUserDetails implements UserDetails {
 
     private final Long id;

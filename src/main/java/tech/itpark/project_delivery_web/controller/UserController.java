@@ -2,14 +2,12 @@ package tech.itpark.project_delivery_web.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import tech.itpark.framework.http.ContentTypes;
 import tech.itpark.framework.http.ServerRequest;
 import tech.itpark.framework.http.ServerResponse;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
-import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.service.user.UserService;
 
 import java.io.IOException;

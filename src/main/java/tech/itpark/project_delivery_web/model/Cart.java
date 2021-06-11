@@ -1,7 +1,6 @@
 package tech.itpark.project_delivery_web.model;
 
 import tech.itpark.project_delivery_web.model.enums.CartStatus;
-import tech.itpark.project_delivery_web.model.enums.OrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,11 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "carts")
-public class Cart {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Cart extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

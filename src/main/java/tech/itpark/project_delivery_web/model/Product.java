@@ -2,15 +2,14 @@ package tech.itpark.project_delivery_web.model;
 
 import tech.itpark.project_delivery_web.model.enums.Category;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "products")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Product extends BaseEntity {
 
     private String name;
 

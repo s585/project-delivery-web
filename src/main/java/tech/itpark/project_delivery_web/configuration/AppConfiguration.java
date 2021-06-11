@@ -78,9 +78,13 @@ public class AppConfiguration {
         basic.setMaxTotal(50);
         basic.setMaxOpenPreparedStatements(100);
         basic.setDriverClassName(Driver.class.getName());
-        basic.setUsername("app");
-        basic.setPassword("pass");
-        basic.setUrl("jdbc:postgresql://localhost:5432/db");
+        basic.setUsername("postgres");
+//        basic.setUsername("app");
+        basic.setPassword("password");
+//        basic.setPassword("pass");
+        basic.setUrl("jdbc:postgresql://192.168.40.54:5432/delivery");
+//        basic.setUrl("jdbc:postgresql://localhost:5432/delivery");
+//        basic.setUrl("jdbc:postgresql://localhost:5432/db");
 
         return basic;
     }
@@ -90,6 +94,7 @@ public class AppConfiguration {
 //    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
 //        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
 //        resourceDatabasePopulator.addScript(new ClassPathResource("data.sql"));
+//
 //        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
 //        dataSourceInitializer.setDataSource(dataSource);
 //        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
@@ -119,7 +124,7 @@ public class AppConfiguration {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "none");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "create-drop");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 

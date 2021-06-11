@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "jwt_token")
-public class JwtToken{
+public class JwtToken {
+
     @Id
     private String token;
 

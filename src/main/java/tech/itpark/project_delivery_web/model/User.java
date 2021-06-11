@@ -10,27 +10,14 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Data
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String password;
-
-    private String secret;
+public class User extends LoginableUser {
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    private String name;
-
     private String email;
-
-    private String address;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
@@ -39,7 +26,4 @@ public class User {
     @OneToMany
     private List<Order> orders;
 
-    private Double longitude;
-
-    private Double latitude;
 }

@@ -22,6 +22,10 @@ public class JwtTokenStatusFilter extends GenericFilterBean {
 
     private JwtTokenService jwtTokenService;
 
+    @Autowired
+    public void setJwtTokenService(JwtTokenService jwtTokenService) {
+        this.jwtTokenService = jwtTokenService;
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
