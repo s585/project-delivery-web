@@ -1,15 +1,16 @@
 package tech.itpark.project_delivery_web.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
-import tech.itpark.project_delivery_web.model.User;
+import tech.itpark.project_delivery_web.model.Role;
+import tech.itpark.project_delivery_web.model.user.User;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
+import tech.itpark.project_delivery_web.repository.RoleRepository;
 import tech.itpark.project_delivery_web.repository.UserRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
 
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private RoleRepository roleRepository;
     private AuthenticationService authenticationService;
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -34,6 +36,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    @Autowired
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Autowired
@@ -68,8 +75,28 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSecret(passwordEncoder.encode(user.getSecret()));
         user.setStatus(UserStatus.ACTIVE);
+        Role roleUser = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        if (user.getRole() == null)
+            user.setRole(roleUser);
         final User saved = userRepository.save(user);
         return userMapper.toDto(saved);
+    }
+
+    @Override
+    public UserDto register(UserDtoRegistration dto) {
+        User user = userMapper.toEntity(dto);
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setSecret(passwordEncoder.encode(user.getSecret()));
+        user.setStatus(UserStatus.ACTIVE);
+
+        Role roleUser = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        if (user.getRole() == null)
+            user.setRole(roleUser);
+
+        return userMapper.toDto(userRepository.save(user));
     }
 
 

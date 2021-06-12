@@ -2,9 +2,10 @@ package tech.itpark.project_delivery_web.service.deliverer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.DelivererDto;
 import tech.itpark.project_delivery_web.mappers.DelivererMapper;
-import tech.itpark.project_delivery_web.model.Deliverer;
+import tech.itpark.project_delivery_web.model.user.Deliverer;
 import tech.itpark.project_delivery_web.repository.DelivererRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class DelivererServiceImpl implements DelivererService {
 
     private DelivererRepository delivererRepository;

@@ -2,10 +2,10 @@ package tech.itpark.project_delivery_web.service.cart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.CartDto;
 import tech.itpark.project_delivery_web.mappers.CartMapper;
 import tech.itpark.project_delivery_web.model.Cart;
-import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.repository.CartRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
 import tech.itpark.project_delivery_web.service.user.UserService;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartServiceImpl implements CartService {
 
     private CartRepository cartRepository;

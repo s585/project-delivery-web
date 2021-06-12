@@ -1,6 +1,7 @@
 package tech.itpark.project_delivery_web.model;
 
 import tech.itpark.project_delivery_web.model.enums.CartStatus;
+import tech.itpark.project_delivery_web.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

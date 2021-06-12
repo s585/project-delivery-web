@@ -2,6 +2,7 @@ package tech.itpark.project_delivery_web.service.order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.OrderDto;
 import tech.itpark.project_delivery_web.mappers.OrderMapper;
 import tech.itpark.project_delivery_web.model.Order;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;

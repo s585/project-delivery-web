@@ -1,6 +1,8 @@
 package tech.itpark.project_delivery_web.model;
 
 import tech.itpark.project_delivery_web.model.enums.OrderStatus;
+import tech.itpark.project_delivery_web.model.user.Deliverer;
+import tech.itpark.project_delivery_web.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

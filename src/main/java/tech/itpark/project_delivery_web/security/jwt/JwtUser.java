@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Builder
-public class CustomUserDetails implements UserDetails {
+public class JwtUser implements UserDetails {
 
     private final Long id;
     private final String name;
@@ -24,9 +24,12 @@ public class CustomUserDetails implements UserDetails {
     private final UserStatus status;
 
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -39,14 +42,31 @@ public class CustomUserDetails implements UserDetails {
         return email;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return status == UserStatus.ACTIVE;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status == UserStatus.ACTIVE;
     }
 
     @Override
@@ -56,19 +76,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (status.equals(UserStatus.ACTIVE)) return true;
-        return false;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public Long getId() {
-        return id;
+        return status == UserStatus.ACTIVE;
     }
 }

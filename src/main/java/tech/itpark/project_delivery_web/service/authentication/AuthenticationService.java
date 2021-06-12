@@ -16,7 +16,7 @@ public interface AuthenticationService {
 
     Authentication authenticate(String email, String password);
 
-    String createToken(Authentication authentication, Role role, String email);
+    String createToken(Role role, String email);
 
     void saveGeneratedJwtToken(String jwt, Date date, String status);
 

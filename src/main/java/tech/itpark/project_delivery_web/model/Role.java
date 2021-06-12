@@ -2,6 +2,7 @@ package tech.itpark.project_delivery_web.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import tech.itpark.project_delivery_web.model.user.User;
 
 import javax.persistence.*;
 import java.util.List;

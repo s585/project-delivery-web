@@ -2,6 +2,7 @@ package tech.itpark.project_delivery_web.service.role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.RoleDto;
 import tech.itpark.project_delivery_web.mappers.RoleMapper;
 import tech.itpark.project_delivery_web.model.Role;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private RoleRepository roleRepository;

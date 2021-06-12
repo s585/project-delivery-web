@@ -2,6 +2,7 @@ package tech.itpark.project_delivery_web.service.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.ProductDto;
 import tech.itpark.project_delivery_web.mappers.ProductMapper;
 import tech.itpark.project_delivery_web.model.Product;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;

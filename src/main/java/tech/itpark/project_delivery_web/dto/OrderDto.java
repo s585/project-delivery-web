@@ -1,8 +1,8 @@
 package tech.itpark.project_delivery_web.dto;
 
-import tech.itpark.project_delivery_web.model.Deliverer;
+import tech.itpark.project_delivery_web.model.user.Deliverer;
 import tech.itpark.project_delivery_web.model.Product;
-import tech.itpark.project_delivery_web.model.User;
+import tech.itpark.project_delivery_web.model.user.User;
 import tech.itpark.project_delivery_web.model.enums.OrderStatus;
 
 import java.time.LocalDateTime;

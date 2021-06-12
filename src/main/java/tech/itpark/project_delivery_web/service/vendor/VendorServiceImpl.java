@@ -2,9 +2,10 @@ package tech.itpark.project_delivery_web.service.vendor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.VendorDto;
 import tech.itpark.project_delivery_web.mappers.VendorMapper;
-import tech.itpark.project_delivery_web.model.Vendor;
+import tech.itpark.project_delivery_web.model.user.Vendor;
 import tech.itpark.project_delivery_web.repository.VendorRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class VendorServiceImpl implements VendorService {
 
     private VendorRepository vendorRepository;

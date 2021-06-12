@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
-import tech.itpark.project_delivery_web.model.User;
+import tech.itpark.project_delivery_web.model.user.User;
 
 import java.util.Objects;
 

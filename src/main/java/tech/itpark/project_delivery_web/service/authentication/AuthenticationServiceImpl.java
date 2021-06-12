@@ -1,6 +1,5 @@
 package tech.itpark.project_delivery_web.service.authentication;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,17 +9,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.user.PasswordRecoverDto;
-import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.JwtToken;
 import tech.itpark.project_delivery_web.model.Role;
-import tech.itpark.project_delivery_web.model.User;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
+import tech.itpark.project_delivery_web.model.user.User;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenProvider;
+import tech.itpark.project_delivery_web.security.jwt.JwtUser;
 import tech.itpark.project_delivery_web.service.token.JwtTokenService;
 import tech.itpark.project_delivery_web.service.user.UserService;
-import tech.itpark.project_delivery_web.service.user.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -29,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private AuthenticationManager authenticationManager;
@@ -72,8 +71,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Map<String, Object> processRequest(UserDtoAuth incomingData) {
         User user = new User();
         Authentication authentication = authenticate(incomingData.getEmail(), incomingData.getPassword());
-        BeanUtils.copyProperties(authentication.getPrincipal(), user);
-        String jwt = createToken(authentication, user.getRole(), user.getEmail());
+
+        JwtUser principal = (JwtUser) authentication.getPrincipal();
+        user.setId(principal.getId());
+        user.setEmail(principal.getUsername());
+        user.setName(principal.getName());
+        user.setRole(principal.getRole());
+        user.setPassword(principal.getPassword());
+        user.setStatus(principal.getStatus());
+
+        String jwt = createToken(user.getRole(), user.getEmail());
         Map<String, Object> responseMap = new HashMap<>();
         if (checkAuthorityPermission(user)) {
             this.saveGeneratedJwtToken(jwt, new Date(), TokenStatus.ACTIVE.name());
@@ -95,8 +102,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String createToken(Authentication authentication, Role role, String email) {
-        return jwtTokenProvider.createToken(authentication, role, email);
+    public String createToken(Role role, String email) {
+        return jwtTokenProvider.createToken(role, email);
     }
 
     @Override
@@ -109,7 +116,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    @Transactional
     public boolean recoverPassword(PasswordRecoverDto dto) {
         User user = service.getByEmail(dto.getEmail());
         if (!encoder.matches(dto.getSecret(), user.getSecret()))

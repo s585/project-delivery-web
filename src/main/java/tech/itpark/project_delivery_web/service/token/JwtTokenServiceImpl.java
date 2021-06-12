@@ -2,6 +2,7 @@ package tech.itpark.project_delivery_web.service.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.security.exception.JwtTokenNotFoundException;
 import tech.itpark.project_delivery_web.model.JwtToken;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class JwtTokenServiceImpl implements JwtTokenService {
 
     private static final String NOT_FOUND_MESSAGE = "Token not found";

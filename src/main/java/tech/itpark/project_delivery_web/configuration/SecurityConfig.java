@@ -9,10 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import tech.itpark.project_delivery_web.security.filter.ExceptionHandlerFilter;
-import tech.itpark.project_delivery_web.security.jwt.JwtConfigurer;
-import tech.itpark.project_delivery_web.security.jwt.JwtTokenFilter;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenProvider;
 
 @Configuration
@@ -21,16 +17,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtTokenProvider jwtTokenProvider;
 
-    private JwtTokenFilter jwtTokenFilter;
-
     @Autowired
     public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
-    }
-
-    @Autowired
-    public void setJwtTokenStatusFilter(JwtTokenFilter jwtTokenFilter) {
-        this.jwtTokenFilter = jwtTokenFilter;
     }
 
     @Bean
@@ -53,18 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/").permitAll()
-                .antMatchers("/api/auth/").permitAll()
-                .antMatchers("/api/auth/").permitAll()
                 .antMatchers("/**").fullyAuthenticated()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new ExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
-                .apply(JwtConfigurer.builder()
-                        .jwtTokenFilter(jwtTokenFilter)
-                        .build())
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .antMatchers("/**").hasAnyAuthority()
+                .anyRequest().authenticated();
     }
+
 }

@@ -1,22 +1,29 @@
 package tech.itpark.project_delivery_web.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tech.itpark.project_delivery_web.model.Permission;
 import tech.itpark.project_delivery_web.model.Role;
-import tech.itpark.project_delivery_web.model.User;
-import tech.itpark.project_delivery_web.security.jwt.CustomUserDetails;
+import tech.itpark.project_delivery_web.model.user.User;
+import tech.itpark.project_delivery_web.security.jwt.JwtUser;
 import tech.itpark.project_delivery_web.service.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@Component
-public class CustomUserDetailsService implements UserDetailsService {
+@Service
+@Slf4j
+@Transactional
+public class JwtUserDetailsService implements UserDetailsService {
 
     private UserService userService;
 
@@ -33,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User with email: " + email + " not found");
         }
 
-        return CustomUserDetails.builder()
+        return JwtUser.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
@@ -44,9 +51,16 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(Role userRole) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userRole.getName()));
-        return authorities;
+    private static List<GrantedAuthority> mapToGrantedAuthorities(Role role) {
+        Stream<SimpleGrantedAuthority> permissions = role.getPermissions()
+                .stream().map(permission -> new SimpleGrantedAuthority(permission.getName()));
+
+        return Stream.concat(Stream.of(new SimpleGrantedAuthority("ROLE_" + role.getName())),
+                permissions).collect(Collectors.toList());
     }
+//    private static List<GrantedAuthority> mapToGrantedAuthorities(Role role) {
+//        List<GrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+//        return authorities;
+//    }
 }
