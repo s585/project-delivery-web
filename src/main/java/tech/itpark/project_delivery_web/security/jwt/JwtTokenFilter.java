@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import tech.itpark.framework.filter.CustomFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,11 +23,19 @@ import java.io.IOException;
  */
 @Component
 @RequiredArgsConstructor
-public class JwtTokenFilter {
+public class JwtTokenFilter extends GenericFilterBean implements CustomFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public void filter(ServletRequest request, ServletResponse response) {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        doFilter(request, response);
+
+        filterChain.doFilter(request, response);
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response) {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);

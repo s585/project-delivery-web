@@ -25,12 +25,15 @@ import tech.itpark.framework.crypto.PasswordHasher;
 import tech.itpark.framework.crypto.PasswordHasherDefaultImpl;
 import tech.itpark.framework.crypto.TokenGenerator;
 import tech.itpark.framework.crypto.TokenGeneratorDefaultImpl;
+import tech.itpark.framework.filter.CustomFilter;
 import tech.itpark.framework.http.Handler;
 import tech.itpark.framework.http.Methods;
 import tech.itpark.project_delivery_web.controller.AuthenticationController;
 import tech.itpark.project_delivery_web.controller.CartController;
 import tech.itpark.project_delivery_web.controller.MediaController;
 import tech.itpark.project_delivery_web.controller.UserController;
+import tech.itpark.project_delivery_web.security.filter.JwtTokenStatusFilter;
+import tech.itpark.project_delivery_web.security.jwt.JwtTokenFilter;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -157,5 +160,11 @@ public class AppConfig {
                 "/api/users", Map.of(Methods.GET, userCtrl::getById),
                 "/api/auth/login", Map.of(Methods.POST, authCtrl::login),
                 "/api/auth/recover", Map.of(Methods.PUT, authCtrl::recoverPassword));
+    }
+
+    @Bean
+    public List<CustomFilter> customFilters(JwtTokenStatusFilter jwtTokenStatusFilter,
+                                            JwtTokenFilter jwtTokenFilter) {
+        return List.of(jwtTokenStatusFilter, jwtTokenFilter);
     }
 }
