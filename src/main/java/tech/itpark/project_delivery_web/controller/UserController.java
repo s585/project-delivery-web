@@ -33,7 +33,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('GET')")
     public void getById(ServerRequest request, ServerResponse response) {
-        final UserDto dto = service.findById(Long.valueOf(request.getRequestParameter("id")), request.getToken());
+        final UserDto dto = service.findById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
         response.write(dto, ContentTypes.APPLICATION_JSON);
     }
 

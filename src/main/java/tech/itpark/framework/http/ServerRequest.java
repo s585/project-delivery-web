@@ -31,8 +31,8 @@ public class ServerRequest {
         return original.getParameter(parameterName);
     }
 
-    public String getParameter(String parameterName) {
-        return original.getParameter(parameterName);
+    public String getRequestAttribute(String attribute) {
+        return original.getAttribute(attribute).toString();
     }
 
     public String getBody() {

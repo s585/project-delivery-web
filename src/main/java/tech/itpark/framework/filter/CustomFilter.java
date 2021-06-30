@@ -6,7 +6,7 @@ import javax.servlet.ServletResponse;
 /**
  * A class implements the CustomFilter interface to indicate that this is a custom request filter.
  */
-public interface CustomFilter extends Cloneable {
+public interface CustomFilter {
 
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse);
 }

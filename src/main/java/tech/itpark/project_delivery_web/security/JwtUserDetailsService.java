@@ -9,13 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.itpark.project_delivery_web.model.Permission;
 import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.user.User;
 import tech.itpark.project_delivery_web.security.jwt.JwtUser;
 import tech.itpark.project_delivery_web.service.user.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,9 +56,5 @@ public class JwtUserDetailsService implements UserDetailsService {
         return Stream.concat(Stream.of(new SimpleGrantedAuthority("ROLE_" + role.getName())),
                 permissions).collect(Collectors.toList());
     }
-//    private static List<GrantedAuthority> mapToGrantedAuthorities(Role role) {
-//        List<GrantedAuthority> authorities = new ArrayList<>();
-//        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-//        return authorities;
-//    }
+
 }

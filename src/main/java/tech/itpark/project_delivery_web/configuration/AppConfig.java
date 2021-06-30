@@ -156,8 +156,8 @@ public class AppConfig {
                                                     AuthenticationController authCtrl, CartController cartCtrl) {
         return Map.of(
                 "/api/users/register", Map.of(Methods.POST, userCtrl::register),
-                "/api/users/all", Map.of(Methods.GET, userCtrl::getAll),
-                "/api/users", Map.of(Methods.GET, userCtrl::getById),
+                "/api/users", Map.of(Methods.GET, userCtrl::getAll),
+                "/api/users/{id}", Map.of(Methods.GET, userCtrl::getById, Methods.DELETE, userCtrl::deleteById),
                 "/api/auth/login", Map.of(Methods.POST, authCtrl::login),
                 "/api/auth/recover", Map.of(Methods.PUT, authCtrl::recoverPassword));
     }
