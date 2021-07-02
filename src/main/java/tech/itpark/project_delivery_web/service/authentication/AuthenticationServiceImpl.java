@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.itpark.project_delivery_web.dto.PasswordResetRequestDto;
 import tech.itpark.project_delivery_web.dto.user.PasswordRecoverDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
@@ -84,7 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Map<String, Object> responseMap = new HashMap<>();
         if (checkAuthorityPermission(user)) {
             this.saveGeneratedJwtToken(jwt, new Date(), TokenStatus.ACTIVE.name());
-            responseMap.put("user", userMapper.toDto(user));
+            responseMap.put("user", userMapper.toRegistrationDto(user));
             responseMap.put("token", jwt);
             return responseMap;
         }
@@ -116,7 +117,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean recoverPassword(PasswordRecoverDto dto) {
+    public boolean resetPassword(PasswordResetRequestDto dto) {
         User user = service.getByEmail(dto.getEmail());
         if (!encoder.matches(dto.getSecret(), user.getSecret()))
             throw new AccessDeniedException("Секреты не совпадают");

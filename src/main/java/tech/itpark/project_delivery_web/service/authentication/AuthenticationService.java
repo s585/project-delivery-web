@@ -1,6 +1,7 @@
 package tech.itpark.project_delivery_web.service.authentication;
 
 import org.springframework.security.core.Authentication;
+import tech.itpark.project_delivery_web.dto.PasswordResetRequestDto;
 import tech.itpark.project_delivery_web.dto.user.PasswordRecoverDto;
 import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
 import tech.itpark.project_delivery_web.model.Role;
@@ -20,5 +21,7 @@ public interface AuthenticationService {
 
     void saveGeneratedJwtToken(String jwt, Date date, String status);
 
-    boolean recoverPassword(PasswordRecoverDto dto);
+//    boolean recoverPassword(PasswordRecoverDto dto);
+
+    boolean resetPassword(PasswordResetRequestDto dto);
 }

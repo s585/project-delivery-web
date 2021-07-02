@@ -35,6 +35,6 @@ public class CartController {
 
     public void deleteById(ServerRequest request, ServerResponse response) throws IOException {
         cartService.deleteById(Long.valueOf(request.getRequestParameter("id")), request.getToken());
-        response.write("deleteById", ContentTypes.TEXT_PLAIN);
+        response.write("Cart with id " + request.getRequestAttribute("id") + " has been deleted", ContentTypes.TEXT_PLAIN);
     }
 }

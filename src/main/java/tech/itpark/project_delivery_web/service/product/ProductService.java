@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductDto> findAll(String token);
+    List<ProductDto> findAllByVendorId(Long id, String token);
 
     ProductDto findById(Long id, String token);
 

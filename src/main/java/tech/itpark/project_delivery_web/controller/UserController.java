@@ -7,8 +7,9 @@ import org.springframework.stereotype.Controller;
 import tech.itpark.framework.http.ContentTypes;
 import tech.itpark.framework.http.ServerRequest;
 import tech.itpark.framework.http.ServerResponse;
+import tech.itpark.project_delivery_web.dto.RegistrationRequestDto;
+import tech.itpark.project_delivery_web.dto.RegistrationResponseDto;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
-import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
 import tech.itpark.project_delivery_web.service.user.UserService;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     public void register(ServerRequest request, ServerResponse response) {
-        final UserDto saved = service.register(request.read(UserDtoRegistration.class));
+        final RegistrationResponseDto saved = service.register(request.read(RegistrationRequestDto.class));
         response.write(saved, ContentTypes.APPLICATION_JSON);
     }
 
@@ -38,9 +39,15 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('UPDATE')")
+    public void setStatusActiveById(ServerRequest request, ServerResponse response) throws IOException {
+        service.setStatusActiveById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        response.write("User with id " + request.getRequestAttribute("id") + " has been brought back to life", ContentTypes.TEXT_PLAIN);
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE')")
     public void deleteById(ServerRequest request, ServerResponse response) throws IOException {
-        service.deleteById(Long.valueOf(request.getRequestParameter("id")), request.getToken());
-        response.write("deleteById", ContentTypes.TEXT_PLAIN);
+        service.deleteById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        response.write("User with id " + request.getRequestAttribute("id") + " has been deleted", ContentTypes.TEXT_PLAIN);
     }
 
 }

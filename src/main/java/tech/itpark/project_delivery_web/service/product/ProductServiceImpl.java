@@ -31,8 +31,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findAll(String token) {
-        return productRepository.findAll().stream().map(productMapper::toDto).collect(Collectors.toList());
+    public List<ProductDto> findAllByVendorId(Long id, String token) {
+        return productRepository.findAllByVendorId(id).stream().map(productMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

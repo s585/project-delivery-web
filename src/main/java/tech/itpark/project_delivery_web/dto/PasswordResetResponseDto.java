@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class PasswordResetResponseDto {
-  private long id;
+  private Long id;
 }

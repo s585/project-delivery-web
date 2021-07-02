@@ -28,10 +28,7 @@ import tech.itpark.framework.crypto.TokenGeneratorDefaultImpl;
 import tech.itpark.framework.filter.CustomFilter;
 import tech.itpark.framework.http.Handler;
 import tech.itpark.framework.http.Methods;
-import tech.itpark.project_delivery_web.controller.AuthenticationController;
-import tech.itpark.project_delivery_web.controller.CartController;
-import tech.itpark.project_delivery_web.controller.MediaController;
-import tech.itpark.project_delivery_web.controller.UserController;
+import tech.itpark.project_delivery_web.controller.*;
 import tech.itpark.project_delivery_web.security.filter.JwtTokenStatusFilter;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenFilter;
 
@@ -121,7 +118,7 @@ public class AppConfig {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "create");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "validate");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 
@@ -153,13 +150,16 @@ public class AppConfig {
 
     @Bean
     public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl,
-                                                    AuthenticationController authCtrl, CartController cartCtrl) {
+                                                    AuthenticationController authCtrl, CartController cartCtrl, ProductController productCtrl) {
         return Map.of(
-                "/api/users/register", Map.of(Methods.POST, userCtrl::register),
                 "/api/users", Map.of(Methods.GET, userCtrl::getAll),
-                "/api/users/{id}", Map.of(Methods.GET, userCtrl::getById, Methods.DELETE, userCtrl::deleteById),
+                "/api/users/{id}", Map.of(Methods.GET, userCtrl::getById,
+                        Methods.PUT, userCtrl::setStatusActiveById,
+                        Methods.DELETE, userCtrl::deleteById),
+                "/api/auth/register", Map.of(Methods.POST, userCtrl::register),
                 "/api/auth/login", Map.of(Methods.POST, authCtrl::login),
-                "/api/auth/recover", Map.of(Methods.PUT, authCtrl::recoverPassword));
+                "/api/auth/reset", Map.of(Methods.PUT, authCtrl::recoverPassword),
+                "api/products", Map.of(Methods.GET, productCtrl::getAllByVendorId));
     }
 
     @Bean

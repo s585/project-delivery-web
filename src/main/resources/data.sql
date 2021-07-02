@@ -12,9 +12,13 @@ VALUES (1, 'LOGIN'),
        (2, 'GET'),
        (3, 'UPDATE');
 
+SELECT setval('permissions_id_seq', (SELECT max(id) FROM "permissions"));
+
 INSERT INTO roles(id, name, priority)
 VALUES (1, 'ADMIN', 1),
        (2, 'USER', 2);
+
+SELECT setval('roles_id_seq', (SELECT max(id) FROM "roles"));
 
 INSERT INTO role_permissions
 VALUES (1, 1),
@@ -33,3 +37,5 @@ VALUES (1, null, null, null, 'admin', '$2a$04$8j4Zq6lbQa0dQ8vNajhWLOPyckkC4Uwfpu
         'user1@mail.com', 2, 'ACTIVE'),
        (4, null, null, null, 'user2', '$2a$04$6Bp43Km7X8EuDXqTaWaEaeYYVCj90pwIFU9XPFs7HWiYcXWFr325m', 'user2',
         'user2@mail.com', 2, 'ACTIVE');
+
+SELECT setval('users_id_seq', (SELECT max(id) FROM "users"));

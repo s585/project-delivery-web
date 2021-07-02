@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class PasswordResetRequestDto {
-    private String login;
+    private String email;
     private String password;
     private String secret;
 }

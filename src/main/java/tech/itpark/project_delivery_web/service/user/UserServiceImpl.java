@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.itpark.project_delivery_web.dto.RegistrationRequestDto;
+import tech.itpark.project_delivery_web.dto.RegistrationResponseDto;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
-import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.user.User;
@@ -16,6 +17,7 @@ import tech.itpark.project_delivery_web.service.authentication.AuthenticationSer
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,36 +71,35 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
+//    @Override
+//    public UserDto create(UserDtoRegistration dto) {
+//        User user = userMapper.toEntity(dto);
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setSecret(passwordEncoder.encode(user.getSecret()));
+//        user.setStatus(UserStatus.ACTIVE);
+//        Role roleUser = roleRepository.findByName("ROLE_USER")
+//                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+//        if (user.getRole() == null)
+//            user.setRole(roleUser);
+//        final User saved = userRepository.save(user);
+//        return userMapper.toDto(saved);
+//    }
+
     @Override
-    public UserDto create(UserDtoRegistration dto) {
+    public RegistrationResponseDto register(RegistrationRequestDto dto) {
         User user = userMapper.toEntity(dto);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSecret(passwordEncoder.encode(user.getSecret()));
         user.setStatus(UserStatus.ACTIVE);
-        Role roleUser = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
-        if (user.getRole() == null)
-            user.setRole(roleUser);
-        final User saved = userRepository.save(user);
-        return userMapper.toDto(saved);
-    }
 
-    @Override
-    public UserDto register(UserDtoRegistration dto) {
-        User user = userMapper.toEntity(dto);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setSecret(passwordEncoder.encode(user.getSecret()));
-        user.setStatus(UserStatus.ACTIVE);
-
-        Role roleUser = roleRepository.findByName("ROLE_USER")
+        Role roleUser = roleRepository.findByName("USER")
                 .orElseThrow(() -> new EntityNotFoundException("Role not found"));
         if (user.getRole() == null)
             user.setRole(roleUser);
 
-        return userMapper.toDto(userRepository.save(user));
+        return userMapper.toRegistrationDto(userRepository.save(user));
     }
-
 
     @Override
     public UserDto update(UserDto dto) {
@@ -113,8 +114,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void setStatusActiveById(Long id, String token) {
+        final User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+    }
+
+    @Override
     public void deleteById(Long id, String token) {
-        userRepository.deleteById(id);
+        final User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
+        user.setStatus(UserStatus.DELETED);
+        userRepository.save(user);
     }
 
     @Override
