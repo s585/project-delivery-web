@@ -1,6 +1,8 @@
 package tech.itpark.project_delivery_web.service.deliverer;
 
 import tech.itpark.project_delivery_web.dto.DelivererDto;
+import tech.itpark.project_delivery_web.dto.RegistrationResponseDto;
+import tech.itpark.project_delivery_web.dto.vendor.VendorRegistrationRequestDto;
 
 import java.util.List;
 
@@ -15,4 +17,6 @@ public interface DelivererService {
     DelivererDto update(DelivererDto dto);
 
     void deleteById(Long id, String token);
+
+    void setStatusActiveById(Long id, String token);
 }

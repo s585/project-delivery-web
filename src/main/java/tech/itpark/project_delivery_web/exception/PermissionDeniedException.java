@@ -1,6 +1,7 @@
 package tech.itpark.project_delivery_web.exception;
 
 public class PermissionDeniedException extends RuntimeException {
+
   public PermissionDeniedException() {
     super();
   }

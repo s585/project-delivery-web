@@ -1,20 +1,19 @@
 package tech.itpark.project_delivery_web.service.user;
 
-import tech.itpark.project_delivery_web.dto.RegistrationRequestDto;
+import tech.itpark.project_delivery_web.dto.user.RegistrationRequestDto;
 import tech.itpark.project_delivery_web.dto.RegistrationResponseDto;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
-import tech.itpark.project_delivery_web.dto.user.UserDtoRegistration;
 import tech.itpark.project_delivery_web.model.user.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    List<UserDto> findAll(String token);
+    List<UserDto> findAll();
 
     UserDto findById(Long id, String token);
 
-//    UserDto create(UserDtoRegistration dto);
+    User findByEmail(String email);
 
     RegistrationResponseDto register(RegistrationRequestDto dto);
 
@@ -25,6 +24,4 @@ public interface UserService {
     void setStatusActiveById(Long id, String token);
 
     void deleteById(Long id, String token);
-
-    User getByEmail(String email);
 }

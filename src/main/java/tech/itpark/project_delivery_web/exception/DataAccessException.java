@@ -1,6 +1,7 @@
 package tech.itpark.project_delivery_web.exception;
 
 public class DataAccessException extends RuntimeException{
+
   public DataAccessException() {
     super();
   }

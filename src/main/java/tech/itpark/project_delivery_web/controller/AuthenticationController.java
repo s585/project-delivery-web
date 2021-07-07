@@ -7,7 +7,7 @@ import tech.itpark.framework.http.ContentTypes;
 import tech.itpark.framework.http.ServerRequest;
 import tech.itpark.framework.http.ServerResponse;
 import tech.itpark.project_delivery_web.dto.PasswordResetRequestDto;
-import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
+import tech.itpark.project_delivery_web.dto.user.UserAuthDto;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class AuthenticationController {
     }
 
     public void login(ServerRequest request, ServerResponse response) {
-        Map<String, Object> data = authenticationService.processRequest(request.read(UserDtoAuth.class));
+        Map<String, Object> data = authenticationService.processRequest(request.read(UserAuthDto.class));
         response.write(data, ContentTypes.APPLICATION_JSON);
     }
 

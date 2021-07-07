@@ -54,7 +54,7 @@ public class GsonBodyConverter implements BodyConverter {
         }
     }
 
-    static class JsonUtil {
+    public static class JsonUtil {
 
         private static ObjectMapper objectMapper = new ObjectMapper();
 

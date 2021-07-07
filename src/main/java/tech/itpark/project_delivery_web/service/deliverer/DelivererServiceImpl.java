@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.DelivererDto;
 import tech.itpark.project_delivery_web.mappers.DelivererMapper;
+import tech.itpark.project_delivery_web.model.enums.UserStatus;
 import tech.itpark.project_delivery_web.model.user.Deliverer;
+import tech.itpark.project_delivery_web.model.user.Vendor;
 import tech.itpark.project_delivery_web.repository.DelivererRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -58,6 +60,17 @@ public class DelivererServiceImpl implements DelivererService {
 
     @Override
     public void deleteById(Long id, String token) {
-        delivererRepository.deleteById(id);
+        final Deliverer deliverer = delivererRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
+        deliverer.setStatus(UserStatus.DELETED);
+        delivererRepository.save(deliverer);
+    }
+
+    @Override
+    public void setStatusActiveById(Long id, String token) {
+        final Deliverer deliverer = delivererRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
+        deliverer.setStatus(UserStatus.ACTIVE);
+        delivererRepository.save(deliverer);
     }
 }

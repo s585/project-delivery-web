@@ -16,6 +16,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tech.itpark.framework.bodyconverter.BodyConverter;
 import tech.itpark.framework.bodyconverter.GsonBodyConverter;
@@ -29,6 +30,8 @@ import tech.itpark.framework.filter.CustomFilter;
 import tech.itpark.framework.http.Handler;
 import tech.itpark.framework.http.Methods;
 import tech.itpark.project_delivery_web.controller.*;
+import tech.itpark.project_delivery_web.exception.BadCredentialsExceptionHandler;
+import tech.itpark.project_delivery_web.exception.ExceptionHandler;
 import tech.itpark.project_delivery_web.security.filter.JwtTokenStatusFilter;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenFilter;
 
@@ -118,7 +121,7 @@ public class AppConfig {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "validate");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "update");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 
@@ -150,21 +153,49 @@ public class AppConfig {
 
     @Bean
     public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl,
-                                                    AuthenticationController authCtrl, CartController cartCtrl, ProductController productCtrl) {
-        return Map.of(
-                "/api/users", Map.of(Methods.GET, userCtrl::getAll),
-                "/api/users/{id}", Map.of(Methods.GET, userCtrl::getById,
+                                                    AuthenticationController authCtrl, CartController cartCtrl,
+                                                    DelivererController delivererCtrl, ProductController productCtrl,
+                                                    VendorController vendorCtrl) {
+        return Map.ofEntries(
+                Map.entry("/api/auth/register", Map.of(Methods.POST, userCtrl::register)),
+                Map.entry("/api/auth/vendors/register", Map.of(Methods.POST, vendorCtrl::register)),
+                Map.entry("/api/auth/login", Map.of(Methods.POST, authCtrl::login)),
+                Map.entry("/api/auth/reset", Map.of(Methods.PUT, authCtrl::recoverPassword)),
+                Map.entry("/api/users", Map.of(Methods.GET, userCtrl::getAll)),
+                Map.entry("/api/users/{id}", Map.of(Methods.GET, userCtrl::getById,
                         Methods.PUT, userCtrl::setStatusActiveById,
-                        Methods.DELETE, userCtrl::deleteById),
-                "/api/auth/register", Map.of(Methods.POST, userCtrl::register),
-                "/api/auth/login", Map.of(Methods.POST, authCtrl::login),
-                "/api/auth/reset", Map.of(Methods.PUT, authCtrl::recoverPassword),
-                "api/products", Map.of(Methods.GET, productCtrl::getAllByVendorId));
+                        Methods.DELETE, userCtrl::deleteById)),
+                Map.entry("/api/products", Map.of(Methods.POST, productCtrl::save)),
+                Map.entry("/api/products/vendors/{id}", Map.of(Methods.GET, productCtrl::getAllByVendorId)),
+                Map.entry("/api/products/{id}", Map.of(Methods.GET, productCtrl::getById,
+                        Methods.PUT, productCtrl::update,
+                        Methods.DELETE, productCtrl::deleteById)),
+                Map.entry("/api/vendors", Map.of(Methods.GET, vendorCtrl::getAll)),
+                Map.entry("/api/vendors/{id}", Map.of(Methods.GET, vendorCtrl::getById,
+                        Methods.PUT, vendorCtrl::update,
+                        Methods.DELETE, vendorCtrl::deleteById)),
+                Map.entry("/api/deliverers", Map.of(Methods.POST, delivererCtrl::save,
+                        Methods.GET, delivererCtrl::getAll)),
+                Map.entry("/api/deliverers/{id}", Map.of(Methods.GET, vendorCtrl::getById,
+                        Methods.PUT, vendorCtrl::update,
+                        Methods.DELETE, vendorCtrl::deleteById)),
+                Map.entry("/api/carts", Map.of(Methods.POST, cartCtrl::save)),
+                Map.entry("/api/carts/owner/{id}", Map.of(Methods.GET, cartCtrl::getByOwnerId)),
+                Map.entry("/api/carts/{id}", Map.of(Methods.GET, cartCtrl::getById,
+                        Methods.PUT, cartCtrl::update,
+                        Methods.DELETE, cartCtrl::deleteById))
+                );
     }
 
     @Bean
     public List<CustomFilter> customFilters(JwtTokenStatusFilter jwtTokenStatusFilter,
                                             JwtTokenFilter jwtTokenFilter) {
         return List.of(jwtTokenStatusFilter, jwtTokenFilter);
+    }
+
+    @Bean
+    public Map<String, ExceptionHandler> handlers(BadCredentialsExceptionHandler badCredentialsExceptionHandler) {
+        return Map.ofEntries(
+                Map.entry(BadCredentialsException.class.getSimpleName(), badCredentialsExceptionHandler));
     }
 }

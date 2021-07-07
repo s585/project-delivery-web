@@ -15,8 +15,8 @@ public class Role extends BaseEntity {
 
     private String name;
 
-    @Column(name = "priority")
-    private Integer priority;
+//    @Column(name = "priority")
+//    private Integer priority;
 
     @OneToMany(mappedBy = "role", orphanRemoval = true)
     private List<User> users;

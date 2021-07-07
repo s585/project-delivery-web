@@ -5,6 +5,6 @@ import tech.itpark.project_delivery_web.model.user.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User getByEmail(String email);
+    User findByEmail(String email);
 
 }

@@ -4,6 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.AntPathMatcher;
 import tech.itpark.framework.filter.CustomFilter;
 import tech.itpark.framework.http.*;
+import tech.itpark.project_delivery_web.exception.ExceptionHandler;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,6 +25,7 @@ public class FrontController extends HttpServlet {
 
     private List<CustomFilter> customFilters;
     private Map<String, Map<String, Handler>> routes;
+    private Map<String, ExceptionHandler> exceptionHandler;
     private RequestResponseReaderWriter rw;
 
     @Override
@@ -35,6 +37,7 @@ public class FrontController extends HttpServlet {
             rw = context.getBean(RequestResponseReaderWriter.class);
             routes = (Map<String, Map<String, Handler>>) context.getBean("routes");
             customFilters = (List<CustomFilter>) context.getBean("customFilters");
+            exceptionHandler = (Map<String, ExceptionHandler>)context.getBean("handlers");
         } catch (Exception e) {
             throw new UnavailableException(e.getMessage());
         }
@@ -60,8 +63,11 @@ public class FrontController extends HttpServlet {
             else
                 notFoundHandler.handle(new ServerRequest(request, rw), new ServerResponse(response, rw));
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            final ExceptionHandler exceptionHandler = this.exceptionHandler.get(e.getClass().getSimpleName());
+            exceptionHandler.handle(e, response);
         }
+
     }
 
     private void parsePathVariables(String key, ServletRequest request) {

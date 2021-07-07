@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.itpark.project_delivery_web.dto.RegistrationRequestDto;
+import tech.itpark.project_delivery_web.dto.user.RegistrationRequestDto;
 import tech.itpark.project_delivery_web.dto.RegistrationResponseDto;
 import tech.itpark.project_delivery_web.dto.user.UserDto;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
@@ -17,18 +17,17 @@ import tech.itpark.project_delivery_web.service.authentication.AuthenticationSer
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private RoleRepository roleRepository;
     private AuthenticationService authenticationService;
     private BCryptPasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
+    private UserRepository userRepository;
+    private UserMapper userMapper;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -56,8 +55,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll(String token) {
-        String email = authenticationService.getEmail(token);
+    public List<UserDto> findAll() {
+//        String email = authenticationService.getEmail(token);
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toDto)
@@ -130,8 +129,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByEmail(String email) {
-        return userRepository.getByEmail(email);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
     //    private final UserRepositoryImpl repository;
 //    private final PasswordHasher passwordHasher;

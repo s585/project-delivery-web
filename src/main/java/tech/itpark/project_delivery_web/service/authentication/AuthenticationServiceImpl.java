@@ -3,19 +3,23 @@ package tech.itpark.project_delivery_web.service.authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.PasswordResetRequestDto;
-import tech.itpark.project_delivery_web.dto.user.PasswordRecoverDto;
-import tech.itpark.project_delivery_web.dto.user.UserDtoAuth;
+import tech.itpark.project_delivery_web.dto.user.UserAuthDto;
+import tech.itpark.project_delivery_web.dto.vendor.VendorAuthDto;
 import tech.itpark.project_delivery_web.mappers.UserMapper;
+import tech.itpark.project_delivery_web.mappers.VendorMapper;
 import tech.itpark.project_delivery_web.model.JwtToken;
 import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.enums.TokenStatus;
+import tech.itpark.project_delivery_web.model.user.AuthUser;
 import tech.itpark.project_delivery_web.model.user.User;
+import tech.itpark.project_delivery_web.model.user.Vendor;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenProvider;
 import tech.itpark.project_delivery_web.security.jwt.JwtUser;
 import tech.itpark.project_delivery_web.service.token.JwtTokenService;
@@ -35,6 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private JwtTokenProvider jwtTokenProvider;
     private JwtTokenService jwtTokenService;
     private UserMapper userMapper;
+    private VendorMapper vendorMapper;
     private UserService service;
     private BCryptPasswordEncoder encoder;
 
@@ -69,23 +74,47 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Map<String, Object> processRequest(UserDtoAuth incomingData) {
-        User user = new User();
+    public Map<String, Object> processRequest(UserAuthDto incomingData) {
+        try {
+            User user = new User();
+            Authentication authentication = authenticate(incomingData.getEmail(), incomingData.getPassword());
+            JwtUser principal = (JwtUser) authentication.getPrincipal();
+            user.setId(principal.getId());
+            user.setEmail(principal.getUsername());
+            user.setName(principal.getName());
+            user.setRole(principal.getRole());
+            user.setPassword(principal.getPassword());
+            user.setStatus(principal.getStatus());
+            String jwt = createToken(user.getRole(), user.getEmail());
+            Map<String, Object> responseMap = new HashMap<>();
+            if (checkAuthorityPermission(user)) {
+                this.saveGeneratedJwtToken(jwt, new Date(), TokenStatus.ACTIVE.name());
+                responseMap.put("user", userMapper.toRegistrationDto(user));
+                responseMap.put("token", jwt);
+            } return responseMap;
+        } catch (BadCredentialsException e) {
+            throw new AccessDeniedException("Доступ запрещен");
+        }
+    }
+
+    @Override
+    public Map<String, Object> processRequest(VendorAuthDto incomingData) {
+        Vendor vendor = new Vendor();
         Authentication authentication = authenticate(incomingData.getEmail(), incomingData.getPassword());
 
         JwtUser principal = (JwtUser) authentication.getPrincipal();
-        user.setId(principal.getId());
-        user.setEmail(principal.getUsername());
-        user.setName(principal.getName());
-        user.setRole(principal.getRole());
-        user.setPassword(principal.getPassword());
-        user.setStatus(principal.getStatus());
+        vendor.setId(principal.getId());
+        vendor.setEmail(principal.getUsername());
+        vendor.setName(principal.getName());
+        vendor.setRole(principal.getRole());
+        vendor.setPassword(principal.getPassword());
+        vendor.setStatus(principal.getStatus());
 
-        String jwt = createToken(user.getRole(), user.getEmail());
+        String jwt = createToken(vendor.getRole(), vendor.getEmail());
         Map<String, Object> responseMap = new HashMap<>();
-        if (checkAuthorityPermission(user)) {
+        if (checkAuthorityPermission(vendor)) {
             this.saveGeneratedJwtToken(jwt, new Date(), TokenStatus.ACTIVE.name());
-            responseMap.put("user", userMapper.toRegistrationDto(user));
+            responseMap.put("user", vendorMapper.toRegistrationDto(vendor));
             responseMap.put("token", jwt);
             return responseMap;
         }
@@ -118,7 +147,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public boolean resetPassword(PasswordResetRequestDto dto) {
-        User user = service.getByEmail(dto.getEmail());
+        User user = service.findByEmail(dto.getEmail());
         if (!encoder.matches(dto.getSecret(), user.getSecret()))
             throw new AccessDeniedException("Секреты не совпадают");
         user.setPassword(encoder.encode(dto.getPassword()));
@@ -126,8 +155,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return true;
     }
 
-    private boolean checkAuthorityPermission(User user) {
-        List<String> roles = List.of("ADMIN", "USER");
+    private boolean checkAuthorityPermission(AuthUser user) {
+        List<String> roles = List.of("ADMIN", "USER", "VENDOR");
         return roles.contains(user.getRole().getName());
     }
 }
