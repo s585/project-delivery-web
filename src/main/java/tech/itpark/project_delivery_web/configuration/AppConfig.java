@@ -32,6 +32,7 @@ import tech.itpark.framework.http.Methods;
 import tech.itpark.project_delivery_web.controller.*;
 import tech.itpark.project_delivery_web.exception.BadCredentialsExceptionHandler;
 import tech.itpark.project_delivery_web.exception.ExceptionHandler;
+import tech.itpark.project_delivery_web.exception.GeneralExceptionHandler;
 import tech.itpark.project_delivery_web.security.filter.JwtTokenStatusFilter;
 import tech.itpark.project_delivery_web.security.jwt.JwtTokenFilter;
 
@@ -200,8 +201,10 @@ public class AppConfig {
     }
 
     @Bean
-    public Map<String, ExceptionHandler> handlers(BadCredentialsExceptionHandler badCredentialsExceptionHandler) {
+    public Map<String, ExceptionHandler> handlers(BadCredentialsExceptionHandler badCredentialsExceptionHandler,
+                                                  GeneralExceptionHandler generalExceptionHandler) {
         return Map.ofEntries(
-                Map.entry(BadCredentialsException.class.getSimpleName(), badCredentialsExceptionHandler));
+                Map.entry(BadCredentialsException.class.getSimpleName(), badCredentialsExceptionHandler),
+                Map.entry(GeneralExceptionHandler.class.getSimpleName(), generalExceptionHandler));
     }
 }

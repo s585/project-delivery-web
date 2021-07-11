@@ -5,6 +5,7 @@ import org.springframework.util.AntPathMatcher;
 import tech.itpark.framework.filter.CustomFilter;
 import tech.itpark.framework.http.*;
 import tech.itpark.project_delivery_web.exception.ExceptionHandler;
+import tech.itpark.project_delivery_web.exception.GeneralExceptionHandler;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class FrontController extends HttpServlet {
@@ -25,7 +27,7 @@ public class FrontController extends HttpServlet {
 
     private List<CustomFilter> customFilters;
     private Map<String, Map<String, Handler>> routes;
-    private Map<String, ExceptionHandler> exceptionHandler;
+    private Map<String, ExceptionHandler> exceptionHandlers;
     private RequestResponseReaderWriter rw;
 
     @Override
@@ -37,7 +39,7 @@ public class FrontController extends HttpServlet {
             rw = context.getBean(RequestResponseReaderWriter.class);
             routes = (Map<String, Map<String, Handler>>) context.getBean("routes");
             customFilters = (List<CustomFilter>) context.getBean("customFilters");
-            exceptionHandler = (Map<String, ExceptionHandler>)context.getBean("handlers");
+            exceptionHandlers = (Map<String, ExceptionHandler>) context.getBean("handlers");
         } catch (Exception e) {
             throw new UnavailableException(e.getMessage());
         }
@@ -64,7 +66,9 @@ public class FrontController extends HttpServlet {
                 notFoundHandler.handle(new ServerRequest(request, rw), new ServerResponse(response, rw));
         } catch (Exception e) {
 //            e.printStackTrace();
-            final ExceptionHandler exceptionHandler = this.exceptionHandler.get(e.getClass().getSimpleName());
+            ExceptionHandler exceptionHandler = Objects
+                    .requireNonNullElse(this.exceptionHandlers.get(e.getClass().getSimpleName()),
+                                        this.exceptionHandlers.get(GeneralExceptionHandler.class.getSimpleName()));
             exceptionHandler.handle(e, response);
         }
 
