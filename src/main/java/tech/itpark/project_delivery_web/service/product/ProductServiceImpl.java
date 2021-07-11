@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findById(Long id, String token) {
+    public ProductDto findById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find product by passed id: " + id));
         return productMapper.toDto(product);
@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteById(Long id, String token) {
+    public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
 }

@@ -154,8 +154,8 @@ public class AppConfig {
     @Bean
     public Map<String, Map<String, Handler>> routes(UserController userCtrl, MediaController mediaCtrl,
                                                     AuthenticationController authCtrl, CartController cartCtrl,
-                                                    DelivererController delivererCtrl, ProductController productCtrl,
-                                                    VendorController vendorCtrl) {
+                                                    DelivererController delivererCtrl, OrderController orderCtrl,
+                                                    ProductController productCtrl, VendorController vendorCtrl) {
         return Map.ofEntries(
                 Map.entry("/api/auth/register", Map.of(Methods.POST, userCtrl::register)),
                 Map.entry("/api/auth/vendors/register", Map.of(Methods.POST, vendorCtrl::register)),
@@ -180,10 +180,16 @@ public class AppConfig {
                         Methods.PUT, vendorCtrl::update,
                         Methods.DELETE, vendorCtrl::deleteById)),
                 Map.entry("/api/carts", Map.of(Methods.POST, cartCtrl::save)),
+                Map.entry("/api/carts/checkout/{id}", Map.of(Methods.POST, cartCtrl::checkout)),
                 Map.entry("/api/carts/owner/{id}", Map.of(Methods.GET, cartCtrl::getByOwnerId)),
                 Map.entry("/api/carts/{id}", Map.of(Methods.GET, cartCtrl::getById,
                         Methods.PUT, cartCtrl::update,
-                        Methods.DELETE, cartCtrl::deleteById))
+                        Methods.DELETE, cartCtrl::deleteById)),
+                Map.entry("/api/orders/owner/{id}", Map.of(Methods.GET, orderCtrl::getByOwnerId)),
+                Map.entry("/api/orders/vendor/{id}", Map.of(Methods.GET, orderCtrl::getByVendorId)),
+                Map.entry("/api/orders/{id}", Map.of(Methods.GET, orderCtrl::getById,
+                        Methods.PUT, orderCtrl::update,
+                        Methods.DELETE, orderCtrl::deleteById))
                 );
     }
 

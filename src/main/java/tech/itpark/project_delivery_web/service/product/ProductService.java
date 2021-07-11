@@ -8,11 +8,11 @@ public interface ProductService {
 
     List<ProductDto> findAllByVendorId(Long id, String token);
 
-    ProductDto findById(Long id, String token);
+    ProductDto findById(Long id);
 
     ProductDto create(ProductDto dto);
 
     ProductDto update(ProductDto dto);
 
-    void deleteById(Long id, String token);
+    void deleteById(Long id);
 }

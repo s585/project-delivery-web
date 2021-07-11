@@ -23,7 +23,7 @@ public class VendorController {
 
     @PreAuthorize("hasAuthority('GET_USERS')")
     public void getAll(ServerRequest request, ServerResponse response) {
-        final List<VendorDto> vendors = vendorService.findAll(request.getToken());
+        final List<VendorDto> vendors = vendorService.findAll();
         response.write(vendors, ContentTypes.APPLICATION_JSON);
     }
 
@@ -40,19 +40,19 @@ public class VendorController {
 
     @PreAuthorize("hasAuthority('GET_USERS')")
     public void getById(ServerRequest request, ServerResponse response) {
-        final VendorDto dto = vendorService.findById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        final VendorDto dto = vendorService.findById(Long.valueOf(request.getRequestAttribute("id")));
         response.write(dto, ContentTypes.APPLICATION_JSON);
     }
 
     @PreAuthorize("hasAuthority('SET_USER_STATUS_ACTIVE')")
     public void setStatusActiveById(ServerRequest request, ServerResponse response) throws IOException {
-        vendorService.setStatusActiveById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        vendorService.setStatusActiveById(Long.valueOf(request.getRequestAttribute("id")));
         response.write("User with id " + request.getRequestAttribute("id") + " has been brought back to life", ContentTypes.TEXT_PLAIN);
     }
 
     @PreAuthorize("hasAuthority('DELETE_USER_BY_ID')")
     public void deleteById(ServerRequest request, ServerResponse response) throws IOException {
-        vendorService.deleteById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        vendorService.deleteById(Long.valueOf(request.getRequestAttribute("id")));
         response.write("User with id " + request.getRequestAttribute("id") + " has been deleted", ContentTypes.TEXT_PLAIN);
     }
 

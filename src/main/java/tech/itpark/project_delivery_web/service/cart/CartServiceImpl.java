@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.itpark.project_delivery_web.dto.CartDto;
 import tech.itpark.project_delivery_web.dto.OrderDto;
 import tech.itpark.project_delivery_web.mappers.CartMapper;
+import tech.itpark.project_delivery_web.mappers.DelivererMapper;
 import tech.itpark.project_delivery_web.mappers.OrderMapper;
 import tech.itpark.project_delivery_web.model.Cart;
 import tech.itpark.project_delivery_web.model.Order;
@@ -13,13 +14,13 @@ import tech.itpark.project_delivery_web.model.enums.CartStatus;
 import tech.itpark.project_delivery_web.model.enums.OrderStatus;
 import tech.itpark.project_delivery_web.repository.CartRepository;
 import tech.itpark.project_delivery_web.repository.OrderRepository;
+import tech.itpark.project_delivery_web.service.DeliveryUtil;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
-import tech.itpark.project_delivery_web.service.order.OrderService;
+import tech.itpark.project_delivery_web.service.delivery.DeliveryService;
 import tech.itpark.project_delivery_web.service.user.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,6 +29,8 @@ public class CartServiceImpl implements CartService {
     private AuthenticationService authenticationService;
     private CartRepository cartRepository;
     private CartMapper cartMapper;
+    private DelivererMapper delivererMapper;
+    private DeliveryService deliveryService;
     private OrderRepository orderRepository;
     private OrderMapper orderMapper;
     private UserService userService;
@@ -48,6 +51,16 @@ public class CartServiceImpl implements CartService {
     }
 
     @Autowired
+    public void setDelivererMapper(DelivererMapper delivererMapper) {
+        this.delivererMapper = delivererMapper;
+    }
+
+    @Autowired
+    public void setDeliveryService(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
+    }
+
+    @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
@@ -63,13 +76,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto findByUserId(Long id, String token) {
-//        return cartRepository.findAll().stream().map(cartMapper::toDto).collect(Collectors.toList());
+    public CartDto findByUserId(Long id) {
         return cartMapper.toDto(cartRepository.findByOwner(id));
     }
 
     @Override
-    public CartDto findById(Long id, String token) {
+    public CartDto findById(Long id) {
         final Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find cart by passed id: " + id));
         return cartMapper.toDto(cart);
@@ -87,16 +99,18 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public OrderDto checkout(CartDto dto, String token) {
+    public OrderDto checkout(CartDto dto) {
         Order order = new Order();
         final Cart cart = cartMapper.toEntity(dto);
         order.setOwner(cart.getOwner());
-//        order.setDeliverer();
-//        order.setDeliveryPrice();
-//        order.setTotalPrice();
+        order.setDeliverer(delivererMapper.toEntity(deliveryService.getDeliverer(cart.getVendor().getId())));
+        order.setDeliveryPrice(deliveryService.getDeliveryPrice(
+                cart.getOwner().getId(), cart.getVendor().getId(), cart.getProducts().get(0).getCategory()));
+        order.setTotalPrice(cart.getTotalPrice() + order.getDeliveryPrice());
         order.setCreationDate(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.IN_PROGRESS);
         final Order saved = orderRepository.save(order);
+        deleteById(cart.getId());
         return orderMapper.toDto(saved);
     }
 
@@ -108,7 +122,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteById(Long id, String token) {
+    public void deleteById(Long id) {
         cartRepository.deleteById(id);
     }
 }

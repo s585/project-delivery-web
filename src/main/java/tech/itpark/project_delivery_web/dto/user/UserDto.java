@@ -12,18 +12,11 @@ import java.util.List;
 public class UserDto {
 
     private Long id;
-
     private String name;
-
     private String email;
-
     private String address;
-
     private RoleDto role;
-
     private List<Order> orders;
-
     private Double lon;
-
     private Double lat;
 }

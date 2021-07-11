@@ -5,15 +5,15 @@ import tech.itpark.project_delivery_web.dto.OrderDto;
 
 public interface CartService {
 
-    CartDto findByUserId(Long id, String token);
+    CartDto findByUserId(Long id);
 
-    CartDto findById(Long id, String token);
+    CartDto findById(Long id);
 
     CartDto create(CartDto dto, String token);
 
-    OrderDto checkout(CartDto dto, String token);
+    OrderDto checkout(CartDto dto);
 
     CartDto update(CartDto dto);
 
-    void deleteById(Long id, String token);
+    void deleteById(Long id);
 }

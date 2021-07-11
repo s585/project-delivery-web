@@ -25,7 +25,7 @@ public class DelivererController {
 
     @PreAuthorize("hasAuthority('GET_USERS')")
     public void getAll(ServerRequest request, ServerResponse response) {
-        final List<DelivererDto> deliverers = delivererService.findAll(request.getToken());
+        final List<DelivererDto> deliverers = delivererService.findAll();
         response.write(deliverers, ContentTypes.APPLICATION_JSON);
     }
 
@@ -43,13 +43,13 @@ public class DelivererController {
 
     @PreAuthorize("hasAuthority('GET_USERS')")
     public void getById(ServerRequest request, ServerResponse response) {
-        final DelivererDto dto = delivererService.findById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        final DelivererDto dto = delivererService.findById(Long.valueOf(request.getRequestAttribute("id")));
         response.write(dto, ContentTypes.APPLICATION_JSON);
     }
 
     @PreAuthorize("hasAuthority('SET_USER_STATUS_ACTIVE')")
     public void setStatusActiveById(ServerRequest request, ServerResponse response) throws IOException {
-        delivererService.setStatusActiveById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        delivererService.setStatusActiveById(Long.valueOf(request.getRequestAttribute("id")));
         response.write("User with id " + request.getRequestAttribute("id") + " has been brought back to life", ContentTypes.TEXT_PLAIN);
     }
 

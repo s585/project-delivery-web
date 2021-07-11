@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-//        String email = authenticationService.getEmail(token);
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toDto)
@@ -64,25 +63,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findById(Long id, String token) {
+    public UserDto findById(Long id) {
         final User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         return userMapper.toDto(user);
     }
-
-//    @Override
-//    public UserDto create(UserDtoRegistration dto) {
-//        User user = userMapper.toEntity(dto);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setSecret(passwordEncoder.encode(user.getSecret()));
-//        user.setStatus(UserStatus.ACTIVE);
-//        Role roleUser = roleRepository.findByName("ROLE_USER")
-//                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
-//        if (user.getRole() == null)
-//            user.setRole(roleUser);
-//        final User saved = userRepository.save(user);
-//        return userMapper.toDto(saved);
-//    }
 
     @Override
     public RegistrationResponseDto register(RegistrationRequestDto dto) {
@@ -113,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setStatusActiveById(Long id, String token) {
+    public void setStatusActiveById(Long id) {
         final User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         user.setStatus(UserStatus.ACTIVE);
@@ -121,7 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(Long id, String token) {
+    public void deleteById(Long id) {
         final User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         user.setStatus(UserStatus.DELETED);

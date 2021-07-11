@@ -11,7 +11,7 @@ public interface UserService {
 
     List<UserDto> findAll();
 
-    UserDto findById(Long id, String token);
+    UserDto findById(Long id);
 
     User findByEmail(String email);
 
@@ -21,7 +21,7 @@ public interface UserService {
 
     User update(User user);
 
-    void setStatusActiveById(Long id, String token);
+    void setStatusActiveById(Long id);
 
-    void deleteById(Long id, String token);
+    void deleteById(Long id);
 }

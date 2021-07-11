@@ -15,6 +15,9 @@ import java.util.List;
 public class Vendor extends AuthUser {
 
     @OneToMany
+    private List<Order> carts;
+
+    @OneToMany
     private List<Order> orders;
 
     @OneToMany

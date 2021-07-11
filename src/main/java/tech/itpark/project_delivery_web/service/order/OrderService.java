@@ -6,15 +6,13 @@ import java.util.List;
 
 public interface OrderService {
 
-    List<OrderDto> findAll(String token);
+    List<OrderDto> findAllByOwnerId(Long id);
 
-    List<OrderDto> findAllByOwnerId(Long id, String token);
+    List<OrderDto> findAllByVendorId(Long id);
 
-    OrderDto findById(Long id, String token);
-
-    OrderDto create(OrderDto dto);
+    OrderDto findById(Long id);
 
     OrderDto update(OrderDto dto);
 
-    void deleteById(Long id, String token);
+    void deleteById(Long id);
 }

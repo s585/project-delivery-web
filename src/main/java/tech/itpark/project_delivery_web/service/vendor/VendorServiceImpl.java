@@ -55,12 +55,12 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<VendorDto> findAll(String token) {
+    public List<VendorDto> findAll() {
         return vendorRepository.findAll().stream().map(vendorMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public VendorDto findById(Long id, String token) {
+    public VendorDto findById(Long id) {
         final Vendor vendor = vendorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find vendor by passed id: " + id));
         return vendorMapper.toDto(vendor);
@@ -94,7 +94,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public void setStatusActiveById(Long id, String token) {
+    public void setStatusActiveById(Long id) {
         final Vendor vendor = vendorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         vendor.setStatus(UserStatus.ACTIVE);
@@ -102,7 +102,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public void deleteById(Long id, String token) {
+    public void deleteById(Long id) {
         final Vendor vendor = vendorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         vendor.setStatus(UserStatus.DELETED);

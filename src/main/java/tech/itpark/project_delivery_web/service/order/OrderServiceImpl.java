@@ -31,27 +31,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> findAll(String token) {
-        return orderRepository.findAll().stream().map(orderMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<OrderDto> findAllByOwnerId(Long id, String token) {
+    public List<OrderDto> findAllByOwnerId(Long id) {
         return orderRepository.findAllByOwner(id).stream().map(orderMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public OrderDto findById(Long id, String token) {
-        final Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find vendor by passed id: " + id));
-        return orderMapper.toDto(order);
+    public List<OrderDto> findAllByVendorId(Long id) {
+        return orderRepository.findAllByVendor(id).stream().map(orderMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public OrderDto create(OrderDto dto) {
-        final Order order = orderMapper.toEntity(dto);
-        final Order saved = orderRepository.save(order);
-        return orderMapper.toDto(saved);
+    public OrderDto findById(Long id) {
+        final Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find vendor by passed id: " + id));
+        return orderMapper.toDto(order);
     }
 
     @Override
@@ -62,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteById(Long id, String token) {
+    public void deleteById(Long id) {
         orderRepository.deleteById(id);
     }
 }

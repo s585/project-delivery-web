@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface VendorService {
 
-    List<VendorDto> findAll(String token);
+    List<VendorDto> findAll();
 
-    VendorDto findById(Long id, String token);
+    VendorDto findById(Long id);
 
     Vendor findByEmail(String email);
 
@@ -19,7 +19,7 @@ public interface VendorService {
 
     VendorDto update(VendorDto dto);
 
-    void deleteById(Long id, String token);
+    void deleteById(Long id);
 
-    void setStatusActiveById(Long id, String token);
+    void setStatusActiveById(Long id);
 }

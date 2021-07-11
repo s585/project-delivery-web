@@ -4,6 +4,7 @@ package tech.itpark.project_delivery_web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import tech.itpark.framework.bodyconverter.GsonBodyConverter;
 import tech.itpark.framework.http.ContentTypes;
 import tech.itpark.framework.http.ServerRequest;
 import tech.itpark.framework.http.ServerResponse;
@@ -26,6 +27,12 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT_INFO')")
     public void save(ServerRequest request, ServerResponse response) {
+        String requestBody = request.getRequestBody();
+        try {
+            System.out.println(GsonBodyConverter.JsonUtil.fromJson(requestBody, ProductDto.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         final ProductDto saved = productService.create(request.read(ProductDto.class));
         response.write(saved, ContentTypes.APPLICATION_JSON);
     }
@@ -37,13 +44,13 @@ public class ProductController {
     }
 
     public void getById(ServerRequest request, ServerResponse response) {
-        final ProductDto product = productService.findById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        final ProductDto product = productService.findById(Long.valueOf(request.getRequestAttribute("id")));
         response.write(product, ContentTypes.APPLICATION_JSON);
     }
 
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT_INFO')")
     public void deleteById(ServerRequest request, ServerResponse response) throws IOException {
-        productService.deleteById(Long.valueOf(request.getRequestAttribute("id")), request.getToken());
+        productService.deleteById(Long.valueOf(request.getRequestAttribute("id")));
         response.write("Product with id " + request.getRequestAttribute("id") + " has been deleted", ContentTypes.TEXT_PLAIN);
     }
 }

@@ -7,7 +7,6 @@ import tech.itpark.project_delivery_web.dto.DelivererDto;
 import tech.itpark.project_delivery_web.mappers.DelivererMapper;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
 import tech.itpark.project_delivery_web.model.user.Deliverer;
-import tech.itpark.project_delivery_web.model.user.Vendor;
 import tech.itpark.project_delivery_web.repository.DelivererRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,12 +32,12 @@ public class DelivererServiceImpl implements DelivererService {
     }
 
     @Override
-    public List<DelivererDto> findAll(String token) {
+    public List<DelivererDto> findAll() {
         return delivererRepository.findAll().stream().map(delivererMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public DelivererDto findById(Long id, String token) {
+    public DelivererDto findById(Long id) {
         final Deliverer deliverer = delivererRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find deliverer by passed id: " + id));
         return delivererMapper.toDto(deliverer);
@@ -67,7 +66,7 @@ public class DelivererServiceImpl implements DelivererService {
     }
 
     @Override
-    public void setStatusActiveById(Long id, String token) {
+    public void setStatusActiveById(Long id) {
         final Deliverer deliverer = delivererRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find user by passed id: " + id));
         deliverer.setStatus(UserStatus.ACTIVE);
