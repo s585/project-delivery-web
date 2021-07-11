@@ -1,6 +1,8 @@
 DELETE
 FROM users;
 DELETE
+FROM products;
+DELETE
 FROM vendors;
 DELETE
 FROM role_permissions;
@@ -106,3 +108,5 @@ VALUES (1, 'FOOD', null, 500, 'pizza', 1),
        (6, 'FOOD', null, 550, 'оливье', 3),
        (7, 'FOOD', null, 490, 'том ям', 4),
        (8, 'FOOD', null, 420, 'курица терияки', 4);
+
+SELECT setval('products_id_seq', (SELECT max(id) FROM "products"));

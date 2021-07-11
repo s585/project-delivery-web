@@ -1,5 +1,6 @@
 package tech.itpark.project_delivery_web.dto;
 
+import tech.itpark.project_delivery_web.dto.vendor.VendorDto;
 import tech.itpark.project_delivery_web.model.enums.Category;
 
 public class ProductDto {
@@ -13,4 +14,6 @@ public class ProductDto {
     private Long price;
 
     private Category category;
+
+    private VendorDto vendorDto;
 }

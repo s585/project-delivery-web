@@ -8,7 +8,7 @@ import java.util.Map;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Category {
-    @SerializedName("FOOD")
+//    @SerializedName("FOOD")
     FOOD(1.35);
 
 //    private static final Map<Double, Category> BY_COEFFICIENT = new HashMap<>();

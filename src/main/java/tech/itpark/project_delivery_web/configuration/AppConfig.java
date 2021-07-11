@@ -19,7 +19,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tech.itpark.framework.bodyconverter.BodyConverter;
-import tech.itpark.framework.bodyconverter.GsonBodyConverter;
+import tech.itpark.framework.bodyconverter.JacksonBodyConverter;
 import tech.itpark.framework.bodyconverter.MultiPartBodyConverter;
 import tech.itpark.framework.bodyconverter.StringBodyConverter;
 import tech.itpark.framework.crypto.PasswordHasher;
@@ -149,7 +149,7 @@ public class AppConfig {
     @Bean
     public List<BodyConverter> bodyConverters() {
         return List.of(
-                new GsonBodyConverter(new Gson()), new StringBodyConverter(), new MultiPartBodyConverter());
+                new JacksonBodyConverter(), new StringBodyConverter(), new MultiPartBodyConverter());
     }
 
     @Bean
