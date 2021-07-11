@@ -96,15 +96,15 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public VendorDto update(Long vendorId, VendorDto dto) {
-        Vendor persistedVendor = vendorRepository.findById(vendorId).orElseThrow(() -> new EntityNotFoundException("Сущность не найдена"));
-//        Vendor vendor = vendorMapper.toEntity(dto);
-        BeanUtils.copyProperties(dto, persistedVendor, Vendor.class);
-        double[] coordinates = deliveryService.getCoordinates(persistedVendor.getAddress());
-        persistedVendor.setLon(coordinates[0]);
-        persistedVendor.setLat(coordinates[1]);
-        final Vendor saved = vendorRepository.save(persistedVendor);
-        return vendorMapper.toDto(saved);
+    public VendorDto update(Long id, VendorDto dto) {
+        Vendor persisted = vendorRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find vendor by passed id: " + id));
+        BeanUtils.copyProperties(dto, persisted, "id");
+        double[] coordinates = deliveryService.getCoordinates(persisted.getAddress());
+        persisted.setLon(coordinates[0]);
+        persisted.setLat(coordinates[1]);
+        final Vendor updated = vendorRepository.save(persisted);
+        return vendorMapper.toDto(updated);
     }
 
     @Override

@@ -17,7 +17,7 @@ public interface UserService {
 
     RegistrationResponseDto register(RegistrationRequestDto dto);
 
-    UserDto update(UserDto dto);
+    UserDto update(Long id, UserDto dto);
 
     User update(User user);
 

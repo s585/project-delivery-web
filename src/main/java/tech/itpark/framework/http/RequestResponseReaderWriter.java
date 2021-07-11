@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import tech.itpark.framework.bodyconverter.BodyConverter;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,13 +22,11 @@ public class RequestResponseReaderWriter {
             if (!converter.canRead(request.getContentType(), clazz)) {
                 continue;
             }
-
-            try {
+            try (
                 InputStream inputStream = request.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream , StandardCharsets.UTF_8));
-//                String collect = reader.lines().collect(Collectors.joining());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream , StandardCharsets.UTF_8)))
+            {
                 return converter.read(request, reader, clazz);
-//                return converter.read(request, request.getReader(), clazz);
             } catch (IOException e) {
                 e.printStackTrace();
                 // TODO: convert to special exception
@@ -46,10 +42,12 @@ public class RequestResponseReaderWriter {
             if (!converter.canWrite(contentType, data.getClass())) {
                 continue;
             }
-
-            try {
+            try (
+                ServletOutputStream outputStream = response.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)))
+            {
                 response.setContentType(contentType);
-                converter.write(response, response.getWriter(), data);
+                converter.write(response, writer, data);
                 return;
             } catch (IOException e) {
                 e.printStackTrace();

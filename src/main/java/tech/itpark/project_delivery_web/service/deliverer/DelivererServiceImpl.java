@@ -1,5 +1,6 @@
 package tech.itpark.project_delivery_web.service.deliverer;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +8,7 @@ import tech.itpark.project_delivery_web.dto.DelivererDto;
 import tech.itpark.project_delivery_web.mappers.DelivererMapper;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
 import tech.itpark.project_delivery_web.model.user.Deliverer;
+import tech.itpark.project_delivery_web.model.user.User;
 import tech.itpark.project_delivery_web.repository.DelivererRepository;
 import tech.itpark.project_delivery_web.service.delivery.DeliveryService;
 
@@ -60,10 +62,15 @@ public class DelivererServiceImpl implements DelivererService {
     }
 
     @Override
-    public DelivererDto update(DelivererDto dto) {
-        final Deliverer deliverer = delivererMapper.toEntity(dto);
-        final Deliverer saved = delivererRepository.save(deliverer);
-        return delivererMapper.toDto(saved);
+    public DelivererDto update(Long id, DelivererDto dto) {
+        Deliverer persisted = delivererRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find vendor by passed id: " + id));
+        BeanUtils.copyProperties(dto, persisted, "id");
+        double[] coordinates = deliveryService.getCoordinates(persisted.getAddress());
+        persisted.setLon(coordinates[0]);
+        persisted.setLat(coordinates[1]);
+        final Deliverer updated = delivererRepository.save(persisted);
+        return delivererMapper.toDto(updated);
     }
 
     @Override

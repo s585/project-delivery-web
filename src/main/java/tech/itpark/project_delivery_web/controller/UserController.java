@@ -34,7 +34,8 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('UPDATE_USER_INFO')")
     public void update(ServerRequest request, ServerResponse response) {
-        final UserDto updated = userService.update(request.read(UserDto.class));
+        Long id = Long.valueOf(request.getRequestAttribute("id"));
+        final UserDto updated = userService.update(id, request.read(UserDto.class));
         response.write(updated, ContentTypes.APPLICATION_JSON);
     }
 

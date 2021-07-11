@@ -12,7 +12,7 @@ public interface DelivererService {
 
     DelivererDto create(DelivererDto dto);
 
-    DelivererDto update(DelivererDto dto);
+    DelivererDto update(Long id, DelivererDto dto);
 
     void deleteById(Long id, String token);
 

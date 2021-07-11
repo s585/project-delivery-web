@@ -15,9 +15,7 @@ import tech.itpark.project_delivery_web.exception.ConversionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -38,8 +36,7 @@ public class GsonBodyConverter implements BodyConverter {
     @Override
     public <T> T read(HttpServletRequest request, Reader reader, Class<T> clazz) {
         try {
-            String jsonString = request.getReader().lines().collect(Collectors.joining());
-            T t = JsonUtil.fromJson(jsonString, clazz);
+            String jsonString = ((BufferedReader) reader).lines().collect(Collectors.joining());
             return gson.fromJson(jsonString, clazz);
         } catch (Exception e) {
             throw new ConversionException(e);
@@ -50,8 +47,9 @@ public class GsonBodyConverter implements BodyConverter {
     @Override
     public void write(HttpServletResponse response, Writer writer, Object value) {
         try {
-            String s = JsonUtil.toJsonString(value);
-            writer.write(s);
+            String jsonString = JsonUtil.toJsonString(value);
+            writer.write(jsonString);
+
         } catch (Exception e) {
             throw new ConversionException(e);
         }
@@ -59,7 +57,7 @@ public class GsonBodyConverter implements BodyConverter {
 
     public static class JsonUtil {
 
-        private static ObjectMapper objectMapper = new ObjectMapper();
+        private static final ObjectMapper objectMapper = new ObjectMapper();
 
         public static byte[] toJson(Object object) throws JsonProcessingException {
             objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);

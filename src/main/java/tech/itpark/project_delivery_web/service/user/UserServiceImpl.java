@@ -1,5 +1,6 @@
 package tech.itpark.project_delivery_web.service.user;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import tech.itpark.project_delivery_web.mappers.UserMapper;
 import tech.itpark.project_delivery_web.model.Role;
 import tech.itpark.project_delivery_web.model.user.User;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
+import tech.itpark.project_delivery_web.model.user.Vendor;
 import tech.itpark.project_delivery_web.repository.RoleRepository;
 import tech.itpark.project_delivery_web.repository.UserRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
@@ -93,13 +95,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(UserDto dto) {
-        final User user = userMapper.toEntity(dto);
-        double[] coordinates = deliveryService.getCoordinates(dto.getAddress());
-        user.setLon(coordinates[0]);
-        user.setLat(coordinates[1]);
-        final User saved = userRepository.save(user);
-        return userMapper.toDto(saved);
+    public UserDto update(Long id, UserDto dto) {
+        User persisted = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find vendor by passed id: " + id));
+        BeanUtils.copyProperties(dto, persisted, "id");
+        double[] coordinates = deliveryService.getCoordinates(persisted.getAddress());
+        persisted.setLon(coordinates[0]);
+        persisted.setLat(coordinates[1]);
+        final User updated = userRepository.save(persisted);
+        return userMapper.toDto(updated);
     }
 
     @Override

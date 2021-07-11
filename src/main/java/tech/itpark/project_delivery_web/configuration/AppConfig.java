@@ -102,7 +102,7 @@ public class AppConfig {
         dataSourceInitializer.setDataSource(dataSource);
         dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
 
-//        resourceDatabasePopulator.execute(dataSource);
+        resourceDatabasePopulator.execute(dataSource);
 
         return dataSourceInitializer;
     }
@@ -122,7 +122,7 @@ public class AppConfig {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "none");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "update");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 
@@ -164,7 +164,8 @@ public class AppConfig {
                 Map.entry("/api/auth/reset", Map.of(Methods.PUT, authCtrl::recoverPassword)),
                 Map.entry("/api/users", Map.of(Methods.GET, userCtrl::getAll)),
                 Map.entry("/api/users/{id}", Map.of(Methods.GET, userCtrl::getById,
-                        Methods.PUT, userCtrl::setStatusActiveById,
+                        Methods.PUT, userCtrl::update,
+                        Methods.PATCH, userCtrl::setStatusActiveById,
                         Methods.DELETE, userCtrl::deleteById)),
                 Map.entry("/api/products", Map.of(Methods.POST, productCtrl::save)),
                 Map.entry("/api/products/vendors/{id}", Map.of(Methods.GET, productCtrl::getAllByVendorId)),

@@ -37,7 +37,8 @@ public class DelivererController {
 
     @PreAuthorize("hasAuthority('UPDATE_USER_INFO')")
     public void update(ServerRequest request, ServerResponse response) {
-        final DelivererDto updated = delivererService.update(request.read(DelivererDto.class));
+        Long id = Long.valueOf(request.getRequestAttribute("id"));
+        final DelivererDto updated = delivererService.update(id, request.read(DelivererDto.class));
         response.write(updated, ContentTypes.APPLICATION_JSON);
     }
 
