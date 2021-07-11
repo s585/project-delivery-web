@@ -27,12 +27,6 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('UPDATE_PRODUCT_INFO')")
     public void save(ServerRequest request, ServerResponse response) {
-        String requestBody = request.getRequestBody();
-        try {
-            System.out.println(GsonBodyConverter.JsonUtil.fromJson(requestBody, ProductDto.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         final ProductDto saved = productService.create(request.read(ProductDto.class));
         response.write(saved, ContentTypes.APPLICATION_JSON);
     }

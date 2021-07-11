@@ -6,8 +6,13 @@ import tech.itpark.framework.bodyconverter.BodyConverter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +26,11 @@ public class RequestResponseReaderWriter {
             }
 
             try {
-                return converter.read(request, request.getReader(), clazz);
+                InputStream inputStream = request.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream , StandardCharsets.UTF_8));
+//                String collect = reader.lines().collect(Collectors.joining());
+                return converter.read(request, reader, clazz);
+//                return converter.read(request, request.getReader(), clazz);
             } catch (IOException e) {
                 e.printStackTrace();
                 // TODO: convert to special exception

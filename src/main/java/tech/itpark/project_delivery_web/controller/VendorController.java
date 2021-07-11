@@ -34,7 +34,8 @@ public class VendorController {
 
     @PreAuthorize("hasAuthority('UPDATE_USER_INFO')")
     public void update(ServerRequest request, ServerResponse response) {
-        final VendorDto updated = vendorService.update(request.read(VendorDto.class));
+        Long vendorId = Long.valueOf(request.getRequestAttribute("id"));
+        final VendorDto updated = vendorService.update(vendorId, request.read(VendorDto.class));
         response.write(updated, ContentTypes.APPLICATION_JSON);
     }
 

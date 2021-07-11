@@ -101,7 +101,7 @@ public class AppConfig {
         dataSourceInitializer.setDataSource(dataSource);
         dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
 
-        resourceDatabasePopulator.execute(dataSource);
+//        resourceDatabasePopulator.execute(dataSource);
 
         return dataSourceInitializer;
     }
@@ -121,7 +121,7 @@ public class AppConfig {
         Properties jpaProperties = new Properties();
 
         jpaProperties.put(Environment.DIALECT, PostgreSQL10Dialect.class.getName());
-        jpaProperties.put(Environment.HBM2DDL_AUTO, "update");
+        jpaProperties.put(Environment.HBM2DDL_AUTO, "none");
         jpaProperties.put(Environment.SHOW_SQL, true);
         jpaProperties.put(Environment.FORMAT_SQL, true);
 

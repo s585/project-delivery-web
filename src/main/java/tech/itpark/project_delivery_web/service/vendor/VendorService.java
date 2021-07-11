@@ -17,7 +17,7 @@ public interface VendorService {
 
     RegistrationResponseDto register(VendorRegistrationRequestDto read);
 
-    VendorDto update(VendorDto dto);
+    VendorDto update(Long vendorId, VendorDto dto);
 
     void deleteById(Long id);
 

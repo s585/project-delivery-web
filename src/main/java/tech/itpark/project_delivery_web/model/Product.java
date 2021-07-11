@@ -1,5 +1,6 @@
 package tech.itpark.project_delivery_web.model;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import tech.itpark.project_delivery_web.model.enums.Category;
@@ -22,5 +23,6 @@ public class Product extends BaseEntity {
     private Long price;
 
     @Enumerated(EnumType.STRING)
+    @SerializedName("category")
     private Category category;
 }

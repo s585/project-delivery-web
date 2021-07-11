@@ -1,5 +1,6 @@
 package tech.itpark.project_delivery_web.service.vendor;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ import tech.itpark.project_delivery_web.model.user.Vendor;
 import tech.itpark.project_delivery_web.repository.RoleRepository;
 import tech.itpark.project_delivery_web.repository.VendorRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
+import tech.itpark.project_delivery_web.service.delivery.DeliveryService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,7 @@ public class VendorServiceImpl implements VendorService {
 
     private AuthenticationService authenticationService;
     private BCryptPasswordEncoder passwordEncoder;
+    private DeliveryService deliveryService;
     private RoleRepository roleRepository;
     private VendorRepository vendorRepository;
     private VendorMapper vendorMapper;
@@ -37,6 +41,11 @@ public class VendorServiceImpl implements VendorService {
     @Autowired
     public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setDeliveryService(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
     }
 
     @Autowired
@@ -87,9 +96,14 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public VendorDto update(VendorDto dto) {
-        final Vendor vendor = vendorMapper.toEntity(dto);
-        final Vendor saved = vendorRepository.save(vendor);
+    public VendorDto update(Long vendorId, VendorDto dto) {
+        Vendor persistedVendor = vendorRepository.findById(vendorId).orElseThrow(() -> new EntityNotFoundException("Сущность не найдена"));
+//        Vendor vendor = vendorMapper.toEntity(dto);
+        BeanUtils.copyProperties(dto, persistedVendor, Vendor.class);
+        double[] coordinates = deliveryService.getCoordinates(persistedVendor.getAddress());
+        persistedVendor.setLon(coordinates[0]);
+        persistedVendor.setLat(coordinates[1]);
+        final Vendor saved = vendorRepository.save(persistedVendor);
         return vendorMapper.toDto(saved);
     }
 

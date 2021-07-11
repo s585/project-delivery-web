@@ -8,6 +8,7 @@ import tech.itpark.project_delivery_web.mappers.DelivererMapper;
 import tech.itpark.project_delivery_web.model.enums.UserStatus;
 import tech.itpark.project_delivery_web.model.user.Deliverer;
 import tech.itpark.project_delivery_web.repository.DelivererRepository;
+import tech.itpark.project_delivery_web.service.delivery.DeliveryService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -18,8 +19,8 @@ import java.util.stream.Collectors;
 public class DelivererServiceImpl implements DelivererService {
 
     private DelivererRepository delivererRepository;
-
     private DelivererMapper delivererMapper;
+    private DeliveryService deliveryService;
 
     @Autowired
     public void setDelivererRepository(DelivererRepository delivererRepository) {
@@ -29,6 +30,11 @@ public class DelivererServiceImpl implements DelivererService {
     @Autowired
     public void setDelivererMapper(DelivererMapper delivererMapper) {
         this.delivererMapper = delivererMapper;
+    }
+
+    @Autowired
+    public void setDeliveryService(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
     }
 
     @Override
@@ -46,6 +52,9 @@ public class DelivererServiceImpl implements DelivererService {
     @Override
     public DelivererDto create(DelivererDto dto) {
         final Deliverer deliverer = delivererMapper.toEntity(dto);
+        double[] coordinates = deliveryService.getCoordinates(dto.getAddress());
+        deliverer.setLon(coordinates[0]);
+        deliverer.setLat(coordinates[1]);
         final Deliverer saved = delivererRepository.save(deliverer);
         return delivererMapper.toDto(saved);
     }

@@ -14,6 +14,7 @@ import tech.itpark.project_delivery_web.model.enums.UserStatus;
 import tech.itpark.project_delivery_web.repository.RoleRepository;
 import tech.itpark.project_delivery_web.repository.UserRepository;
 import tech.itpark.project_delivery_web.service.authentication.AuthenticationService;
+import tech.itpark.project_delivery_web.service.delivery.DeliveryService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     private AuthenticationService authenticationService;
     private BCryptPasswordEncoder passwordEncoder;
+    private DeliveryService deliveryService;
     private RoleRepository roleRepository;
     private UserRepository userRepository;
     private UserMapper userMapper;
@@ -52,6 +54,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setDeliveryService(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
     }
 
     @Override
@@ -88,6 +95,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(UserDto dto) {
         final User user = userMapper.toEntity(dto);
+        double[] coordinates = deliveryService.getCoordinates(dto.getAddress());
+        user.setLon(coordinates[0]);
+        user.setLat(coordinates[1]);
         final User saved = userRepository.save(user);
         return userMapper.toDto(saved);
     }

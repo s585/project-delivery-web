@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 // option -> r -> i -> enter
@@ -37,7 +38,9 @@ public class GsonBodyConverter implements BodyConverter {
     @Override
     public <T> T read(HttpServletRequest request, Reader reader, Class<T> clazz) {
         try {
-            return gson.fromJson(reader, clazz);
+            String jsonString = request.getReader().lines().collect(Collectors.joining());
+            T t = JsonUtil.fromJson(jsonString, clazz);
+            return gson.fromJson(jsonString, clazz);
         } catch (Exception e) {
             throw new ConversionException(e);
         }
